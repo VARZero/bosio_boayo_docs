@@ -19,13 +19,13 @@ PAGES = [
     ("geometry", "핵심 시스템", "정이십면체 장면", "20면 · 211타일 · M×M 셀", "7·7·7·8 분할과 작은 삼각 셀의 주소 체계를 설명합니다.", "정이십면체 7-7-7-8 타일 M16"),
     ("output-core", "핵심 시스템", "출력 코어 RTL", "투영과 HDMI 출력", "FPGA가 실제로 수행하는 면 선택, 자세 계수, 캐시와 영상을 설명합니다.", "RTL Q24 HDMI 센서 AXI"),
     ("sensor-buttons", "핵심 시스템", "센서와 버튼", "GY-521 · Pmod B · BTN", "직접 AXI4-Stream 센서 경로와 PYNQ 버튼 입력을 설명합니다.", "MPU6050 I2C 버튼 시선"),
-    ("window-manager", "핵심 시스템", "Bosio 창 관리자", "구면 창과 부분 갱신", "IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.", "IPC 합성 포커스 NEON BPT1"),
+    ("window-manager", "핵심 시스템", "Bosio 창 관리자", "구면 창과 부분 갱신", "창 입력과 포커스, C++/NEON 합성, 바뀐 타일만 보내는 BPT1 갱신을 설명합니다.", "IPC 합성 포커스 NEON BPT1"),
     ("boayo", "앱과 UI", "BoAYo 데스크톱", "패널과 앱 캡션", "런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.", "런처 패널 캡션 BTN2 앱"),
-    ("sdk", "앱과 UI", "앱 SDK", "내 앱에 구면 창 붙이기", "BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.", "BoayoSDK Python API 예제"),
-    ("sdk-reference", "앱과 UI", "SDK API 참고서", "함수와 이벤트 계약", "창 생명주기, 공개 함수, 상태 필드와 이벤트의 정확한 의미를 찾아봅니다.", "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"),
+    ("sdk", "앱과 UI", "앱 SDK", "내 앱에 구면 창 붙이기", "BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.", "BoayoSDK Python API 예제"),
+    ("sdk-reference", "앱과 UI", "SDK 함수·이벤트", "함수와 이벤트 안내", "창 만들기와 닫기, 공개 함수, 상태값과 이벤트의 사용법을 찾아봅니다.", "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"),
     ("deployment", "운영", "배포와 부팅", "FullStack 실행 절차", "세 저장소와 통합 저장소, 자동 시작 서비스 및 업데이트 흐름입니다.", "FullStack GitHub 부팅 서비스 배포"),
     ("quality", "운영", "화질과 성능", "AA · 해상도 · 검증", "M=16의 화질 한계, 두 단계 AA와 실제 확인 지표를 구분합니다.", "AA FPS 성능 투영 RGB332"),
-    ("reference", "운영", "API와 소스", "계약과 원본 문서", "각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.", "API 레지스터 문서 소스"),
+    ("reference", "참고", "데이터와 소스", "데이터 형식과 원본 코드", "센서·앱·장면 데이터의 형식과 전달 경로, 개발 저장소를 정리했습니다.", "데이터 형식 저장소 레지스터 API"),
 ]
 
 

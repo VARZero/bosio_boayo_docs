@@ -7,3 +7,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar{transition:none}.article .card:hover{transform:none}}
 .article .flow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:25px 0}.article .flow span{display:inline-block;padding:9px 12px;background:#e5f0ed;border:1px solid #cadbd7;border-radius:10px;color:#23555b;font-size:.79rem;font-weight:700;line-height:1.4}.article .flow span+span:before{content:"→";color:#6a9990;margin-right:9px;font-weight:800}
 @media(max-width:760px){.main,.article{width:100%;min-width:0}.article p,.article li{overflow-wrap:anywhere}.article pre{max-width:100%}.repo-link{display:none}}
+/* Keep repository links readable in horizontally scrollable tables. */
+.article table td a{white-space:nowrap}

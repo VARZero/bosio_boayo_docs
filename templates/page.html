@@ -43,7 +43,7 @@
           <a class="nav-item{% if slug == item[0] %} active{% endif %}" href="{% if item[0] == 'index' %}./{% else %}{{ item[0] }}.html{% endif %}"{% if slug == item[0] %} aria-current="page"{% endif %}>{{ item[2] }}</a>
         {% endfor %}
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>{{ group }}</span><span aria-hidden="true">/</span><strong>{{ label }}</strong></div>

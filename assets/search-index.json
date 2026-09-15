@@ -45,7 +45,7 @@
     "url": "window-manager.html",
     "label": "Bosio 창 관리자",
     "title": "구면 창과 부분 갱신",
-    "summary": "IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.",
+    "summary": "창 입력과 포커스, C++/NEON 합성, 바뀐 타일만 보내는 BPT1 갱신을 설명합니다.",
     "keywords": "IPC 합성 포커스 NEON BPT1"
   },
   {
@@ -59,14 +59,14 @@
     "url": "sdk.html",
     "label": "앱 SDK",
     "title": "내 앱에 구면 창 붙이기",
-    "summary": "BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.",
+    "summary": "BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.",
     "keywords": "BoayoSDK Python API 예제"
   },
   {
     "url": "sdk-reference.html",
-    "label": "SDK API 참고서",
-    "title": "함수와 이벤트 계약",
-    "summary": "창 생명주기, 공개 함수, 상태 필드와 이벤트의 정확한 의미를 찾아봅니다.",
+    "label": "SDK 함수·이벤트",
+    "title": "함수와 이벤트 안내",
+    "summary": "창 만들기와 닫기, 공개 함수, 상태값과 이벤트의 사용법을 찾아봅니다.",
     "keywords": "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"
   },
   {
@@ -85,9 +85,9 @@
   },
   {
     "url": "reference.html",
-    "label": "API와 소스",
-    "title": "계약과 원본 문서",
-    "summary": "각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.",
-    "keywords": "API 레지스터 문서 소스"
+    "label": "데이터와 소스",
+    "title": "데이터 형식과 원본 코드",
+    "summary": "센서·앱·장면 데이터의 형식과 전달 경로, 개발 저장소를 정리했습니다.",
+    "keywords": "데이터 형식 저장소 레지스터 API"
   }
 ]

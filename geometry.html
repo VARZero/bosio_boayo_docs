@@ -46,13 +46,14 @@
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item" href="sdk.html">앱 SDK</a>
-          <a class="nav-item" href="sdk-reference.html">SDK API 참고서</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
             <div class="nav-group">운영</div>
           <a class="nav-item" href="deployment.html">배포와 부팅</a>
           <a class="nav-item" href="quality.html">화질과 성능</a>
-          <a class="nav-item" href="reference.html">API와 소스</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>핵심 시스템</span><span aria-hidden="true">/</span><strong>정이십면체 장면</strong></div>
@@ -61,24 +62,24 @@
         <h1>20면 · 211타일 · M×M 셀</h1>
         <p>7·7·7·8 분할과 작은 삼각 셀의 주소 체계를 설명합니다.</p>
       </div>
-      <article class="article"><p class="lead">정이십면체의 20개 면을 작은 삼각 타일로 나눕니다. <strong>작은 삼각형 하나가 타일</strong>이고, 현재는 그 타일의 한 변을 M=16으로 다시 나눈 작은 삼각 셀을 색 저장 단위로 사용합니다.</p>
+      <article class="article"><p class="lead">정이십면체의 각 면은 작은 삼각형으로 나뉩니다. <strong>그 작은 삼각형 하나가 타일</strong>입니다. 현재 설정은 타일 한 변을 다시 16개로 나누고, 그 안의 더 작은 삼각 셀마다 색을 저장합니다.</p>
 <div class="metric-strip"><div class="metric"><strong>20</strong><span>면</span></div><div class="metric"><strong>4,220</strong><span>전체 타일: 20×211</span></div><div class="metric"><strong>1,080,320</strong><span>M=16일 때 전체 셀 수</span></div></div>
 <h2>면 안의 7·7·7·8 분할</h2>
-<p>각 면의 타일 네 영역은 변 분할도 7, 7, 7, 8을 갖습니다. 영역별 삼각 타일 수는 각각 49, 49, 49, 64개이므로 면당 총 211개입니다.</p>
+<p>한 면은 타일 한 변에 각각 7개, 7개, 7개, 8개가 놓이는 네 영역으로 나뉩니다. 각 영역의 타일 수는 49개, 49개, 49개, 64개이고, 합하면 면당 211개입니다.</p>
 <pre><code>면당 타일 = 7² + 7² + 7² + 8² = 211
 전체 타일 = 20 × 211 = 4,220
 타일당 작은 삼각 셀 = M²
 M=16 → 타일당 256셀, 전체 1,080,320셀</code></pre>
-<div class="callout"><strong>타일과 셀을 구분합니다</strong><p>7·7·7·8에서 세는 작은 삼각형은 <em>타일</em>입니다. 그 타일 안에서 M을 사용해 쪼갠 삼각형은 색을 가진 <em>셀</em>입니다. M을 올리면 한 타일의 셀 수가 M²에 따라 증가합니다.</p></div>
+<div class="callout"><strong>타일과 셀은 다릅니다</strong><p>7·7·7·8 분할에서 생기는 삼각형이 <em>타일</em>입니다. 각 타일을 다시 M개씩 나눠 생기는 작은 삼각형이 색을 저장하는 <em>셀</em>입니다. M을 두 배로 늘리면 타일당 셀 수는 네 배가 됩니다.</p></div>
 <h2>현재 해상도와 확장</h2>
-<div class="table-scroll"><table><thead><tr><th>M</th><th>타일당 셀</th><th>전체 셀</th><th>현재 용도</th></tr></thead><tbody><tr><td>8</td><td>64</td><td>270,080</td><td>낮은 분할도 실험</td></tr><tr><td>16</td><td>256</td><td>1,080,320</td><td>실사용 기본값</td></tr><tr><td>32</td><td>1,024</td><td>4,321,280</td><td>높은 분할도 선택 가능; 자원·합성 속도 고려 필요</td></tr></tbody></table></div>
-<p>출력 코어에는 M=8/16/32 선택이 있으나, 현재 통합 실행은 M=16입니다. M=32로 올리는 것만으로 사용 가능한 앱 글꼴 품질이 자동 개선되는 것은 아닙니다. 더 많은 셀을 채우고 전송하는 비용까지 함께 늘어납니다.</p>
+<div class="table-scroll"><table><thead><tr><th>M</th><th>타일당 셀</th><th>전체 셀</th><th>설명</th></tr></thead><tbody><tr><td>8</td><td>64</td><td>270,080</td><td>분할 수가 적은 설정</td></tr><tr><td>16</td><td>256</td><td>1,080,320</td><td>현재 통합 실행의 기본값</td></tr><tr><td>32</td><td>1,024</td><td>4,321,280</td><td>셀 수가 많아 자원과 합성 속도를 다시 확인해야 함</td></tr></tbody></table></div>
+<p>출력 코어는 M=8·16·32를 지원하지만 현재 통합 실행은 M=16입니다. M=32로 올리면 표현할 수 있는 위치가 촘촘해지는 대신, 소프트웨어가 채우고 전송해야 할 셀 수도 네 배가 됩니다. 앱 글꼴을 그대로 둔 채 M만 올려서는 글씨가 자동으로 선명해지지 않습니다.</p>
 <h2>타일 내부 셀 인덱스</h2>
-<p>타일 안의 셀은 행 우선으로 저장되며, 두 방향의 삼각형이 번갈아 나타납니다. 행 마지막에는 한 방향만 남습니다.</p>
+<p>타일 안의 셀 주소는 행 순서로 정합니다. 각 행에서 서로 반대 방향을 향한 삼각형이 번갈아 나타나며, 행 끝에는 한 방향의 삼각형만 남습니다.</p>
 <pre><code>cell_index = row² + 2 × column + orientation
 row = 0 … M-1
 orientation = 0 또는 1 (행 마지막은 하나만)</code></pre>
-<p>정사각형 UV 이미지에 삼각형을 억지로 맞추는 대신 삼각 셀 주소를 직접 사용합니다. 화면 픽셀에서 계산된 방향은 면·타일·셀 순서로 주소가 결정됩니다.</p>
+<p>출력 코어는 화면 픽셀의 방향으로 면, 타일, 셀을 차례로 찾습니다. 그 결과를 정사각형 이미지 좌표로 바꾸지 않고 삼각 셀 주소로 사용합니다.</p>
 <p class="source-note">원본: <a href="https://github.com/VARZero/bosio_OutputCore#정이십면체-배열">출력 코어 배열 정의</a>, <a href="https://github.com/VARZero/bosio_OutputCore/blob/main/software/bosio_geometry_v2.py">장면 패킹 코드</a>.</p>
 </article>
       <div class="page-end">

@@ -46,13 +46,14 @@
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item" href="sdk.html">앱 SDK</a>
-          <a class="nav-item" href="sdk-reference.html">SDK API 참고서</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
             <div class="nav-group">운영</div>
           <a class="nav-item" href="deployment.html">배포와 부팅</a>
           <a class="nav-item" href="quality.html">화질과 성능</a>
-          <a class="nav-item" href="reference.html">API와 소스</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>시작</span><span aria-hidden="true">/</span><strong>빠른 시작</strong></div>
@@ -61,29 +62,29 @@
         <h1>PYNQ-Z2 실행</h1>
         <p>통합 저장소를 내려받고 보드에 올린 뒤 출력과 창을 확인합니다.</p>
       </div>
-      <article class="article"><p class="lead">가장 빠른 경로는 <strong>FullStack 저장소를 서브모듈까지 복제</strong>하고, 통합 스크립트로 보드에 배포한 다음 서비스 상태를 확인하는 것입니다.</p>
+      <article class="article"><p class="lead">먼저 <strong>FullStack 저장소와 하위 저장소를 함께 내려받으세요.</strong> 통합 스크립트로 PYNQ-Z2에 배포하고, Bosio·BoAYo 서비스가 시작됐는지 확인하면 됩니다.</p>
 <h2>1. 개발 소스 내려받기</h2>
 <pre><code>git clone --recursive https://github.com/VARZero/bosio_FullStack.git
 cd bosio_FullStack
 python -m pip install -r requirements.txt</code></pre>
-<p>이미 일반 복제를 했다면 <code>git submodule update --init --recursive</code>를 실행합니다. 출력 코어 RTL, 센서 허브 RTL, BoAYo SDK는 각각의 구성 요소 저장소에서 내려옵니다.</p>
+<p><code>--recursive</code> 없이 복제했다면 <code>git submodule update --init --recursive</code>를 실행하세요. 출력 코어 RTL, 센서 허브 RTL, BoAYo SDK는 각각 별도의 하위 저장소에 있습니다.</p>
 <h2>2. PYNQ-Z2 배포와 실행</h2>
-<p>보드 SSH 접속 정보는 환경 변수로 전달합니다. 비밀번호나 키를 저장소에 기록하지 않습니다.</p>
+<p>보드의 SSH 접속 정보는 환경 변수로 설정합니다. 비밀번호와 개인키는 Git 저장소에 넣지 마세요.</p>
 <pre><code># Windows PowerShell 예시
 $env:BOSIO_PYNQ_HOST = "192.168.2.99"
 $env:BOSIO_PYNQ_USER = "xilinx"
 $env:BOSIO_PYNQ_PASSWORD = "&lt;보드 비밀번호&gt;"
 python scripts/bosio_stack.py deploy-start</code></pre>
-<p>통합 스크립트는 bitstream과 SphericalWM을 설치하고, 현재 C++ 합성기를 보드에서 빌드한 다음 BoAYo 런처·SDK·앱 예제를 배포합니다. 이후 두 systemd 서비스가 부팅 때 시작됩니다. 전체 실행 과정은 <a href="deployment.html">배포와 부팅</a>에 있습니다.</p>
+<p>통합 스크립트는 비트스트림과 Bosio 창 관리자를 설치하고, C++ 합성기를 보드에서 빌드한 뒤 BoAYo 런처·SDK·앱 예제를 배포합니다. 설치된 두 서비스는 다음 부팅부터 자동으로 시작됩니다. 자세한 순서는 <a href="deployment.html">배포와 부팅</a>에 있습니다.</p>
 <h2>3. 상태 확인</h2>
 <pre><code>python scripts/bosio_stack.py status
 # 보드에서 직접 확인할 때
 systemctl is-active bosio-window-manager.service
 systemctl is-active boayo-desktop.service</code></pre>
-<p><code>scene_valid=True</code>, <code>error=False</code>, <code>launcher_present=True</code>를 확인합니다. GY-521이 연결되고 보정이 끝났다면 <code>sensor_active=True</code>와 증가하는 <code>sensor_packets</code>도 확인할 수 있습니다.</p>
+<p>상태 출력에 <code>scene_valid=True</code>, <code>error=False</code>, <code>launcher_present=True</code>가 나오면 장면과 런처가 준비된 상태입니다. GY-521이 연결되고 보정이 끝났다면 <code>sensor_active=True</code>도 확인할 수 있습니다.</p>
 <h2>4. 창 열고 앱 실행</h2>
-<ol><li>BTN0 또는 BTN1을 누르면 유일한 BoAYo 런처 패널이 현재 시선 위치에 열립니다.</li><li>런처의 실제 실행 명령이 등록된 앱을 BTN2 시선 클릭으로 선택합니다.</li><li>앱은 별도 프로세스로 시작되고 SDK를 통해 자기 Bosio 창을 생성합니다. 런처는 앱이 시작되면 즉시 접힙니다.</li><li>BTN0/BTN1로 런처를 다시 열어도 기존 앱 창은 유지됩니다. 패널 밖 클릭은 패널만 접습니다.</li></ol>
-<div class="callout"><strong>화면이 검정색일 때</strong><p>서비스와 <code>scene_valid</code>를 먼저 확인합니다. 앱 시작 순간의 잠깐 검정 프레임은 허용하지만, 계속 검정이면 HDMI 연결·bitstream·장면 갱신을 확인해야 합니다. <a href="deployment.html">운영 절차</a>에 로그 명령이 있습니다.</p></div>
+<ol><li>BTN0 또는 BTN1을 눌러 런처 패널을 현재 시선 위치에 엽니다.</li><li>실행 명령이 등록된 앱을 BTN2로 선택합니다.</li><li>앱이 별도 프로세스로 시작되어 Bosio 창을 만들면 런처 패널은 닫힙니다.</li><li>BTN0이나 BTN1로 패널을 다시 열어도 실행 중인 앱 창은 유지됩니다. 패널 밖을 클릭하면 패널만 닫힙니다.</li></ol>
+<div class="callout"><strong>화면이 계속 검정색일 때</strong><p>두 서비스와 <code>scene_valid</code> 상태를 먼저 확인하세요. 앱 실행 순간에 검정 프레임이 잠깐 나올 수 있지만 계속 검정이면 HDMI 연결, 비트스트림, 장면 갱신을 확인해야 합니다. <a href="deployment.html">배포와 부팅</a>에 로그 확인 명령이 있습니다.</p></div>
 </article>
       <div class="page-end">
         <a href="architecture.html"><span>다음 문서</span><strong>시스템 구조 →</strong></a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.">
+  <meta name="description" content="BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.">
   <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, BoayoSDK Python API 예제">
   <meta name="theme-color" content="#112b3a">
   <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/sdk.html">
@@ -46,23 +46,24 @@
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item active" href="sdk.html" aria-current="page">앱 SDK</a>
-          <a class="nav-item" href="sdk-reference.html">SDK API 참고서</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
             <div class="nav-group">운영</div>
           <a class="nav-item" href="deployment.html">배포와 부팅</a>
           <a class="nav-item" href="quality.html">화질과 성능</a>
-          <a class="nav-item" href="reference.html">API와 소스</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>앱과 UI</span><span aria-hidden="true">/</span><strong>앱 SDK</strong></div>
       <div class="page-hero">
         <div class="eyebrow">앱과 UI <span>·</span> 앱 SDK</div>
         <h1>내 앱에 구면 창 붙이기</h1>
-        <p>BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.</p>
+        <p>BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.</p>
       </div>
       <article class="article"><p class="lead">여러 Python 앱이 동일한 BoAYo 창 규칙을 쓰려면 <code>boayo_sdk.py</code>를 가져옵니다. SDK가 Bosio IPC 접속, 창 등록, 아래 캡션, 이벤트 분배를 맡고 앱은 내용만 그립니다.</p>
-<div class="callout"><strong>API를 자세히 찾고 싶다면</strong><p><a href="sdk-reference.html">SDK API 참고서</a>에 각 함수의 인자·반환값, <code>BoayoEvent</code> 필드, <code>BoayoSurface</code> 그리기 함수를 정리했습니다.</p></div>
+<div class="callout"><strong>함수와 이벤트를 찾으려면</strong><p><a href="sdk-reference.html">SDK 함수·이벤트 안내</a>에 함수별 인자와 반환값, <code>BoayoEvent</code> 필드, <code>BoayoSurface</code> 그리기 함수를 정리했습니다.</p></div>
 <h2>가장 작은 실행 앱</h2>
 <pre><code>import time
 from boayo_sdk import BoayoSDK, INK
@@ -81,12 +82,12 @@ with BoayoSDK("hello") as sdk:
                     and event.type == "pointer_button" and event.pressed):
                 print(f"click: ({event.x:.1f}, {event.y:.1f})", flush=True)
         time.sleep(0.05)</code></pre>
-<p><code>create_window()</code>에 자세 좌표를 생략하면 런처가 실행 위치를 환경 변수 <code>BOAYO_APP_AZIMUTH</code>와 <code>BOAYO_APP_ELEVATION</code>으로 전달합니다. <code>content</code>는 캡션을 제외한 앱 내용 사각형이고 클릭 좌표 <code>event.x/y</code>도 그 사각형의 왼쪽 위 기준입니다. 캡션 클릭은 SDK가 자체 처리하므로 앱 내용 클릭 이벤트로 전달되지 않습니다.</p>
+<p><code>create_window()</code>에서 중심 각도를 생략하면 런처가 <code>BOAYO_APP_AZIMUTH</code>와 <code>BOAYO_APP_ELEVATION</code>으로 전달한 위치에 창이 열립니다. <code>content</code>는 캡션을 제외한 앱 내용 영역이고, 클릭 좌표 <code>event.x/y</code>도 그 영역의 왼쪽 위가 기준입니다. 캡션 클릭은 SDK가 처리하므로 앱 내용의 클릭 이벤트로 전달되지 않습니다.</p>
 <h2>이미지 전달</h2>
 <pre><code># image: NumPy 배열, shape=(높이, 너비, 3), RGB24
 window.present_rgb(image, fit="contain")
 # 필요하면 fit="stretch"</code></pre>
-<p>SDK가 내용을 그린 뒤 캡션을 덧그립니다. 앱은 이미 렌더링한 이미지를 그대로 전달할 수 있습니다. 보이는 픽셀의 최종 품질은 표면 크기, 창의 각도 크기, M 셀 분할도, Bosio 투영 AA에 함께 좌우됩니다. 작은 글씨에는 소스 이미지에서 충분한 획 굵기와 크게 그린 글자를 쓰는 편이 좋습니다.</p>
+<p>앱에서 만든 RGB 이미지를 보내면 SDK가 창 내용 영역에 맞춰 놓고 아래 캡션을 그립니다. 글씨의 선명도는 원본 이미지 크기, 창의 각도 크기, M 분할 수, Bosio의 투영 안티에일리어싱에 영향을 받습니다. 작은 글씨는 앱에서 먼저 크게·굵게 그리는 편이 좋습니다.</p>
 <h2>현재 크기와 포커스 읽기</h2>
 <pre><code>state = sdk.window_state(window)  # 또는 window.state
 print(state.width_deg, state.height_deg)          # 구면 창의 각도 크기(°)
@@ -102,7 +103,7 @@ for event in sdk.poll_events():
         window.present(draw)  # 필요한 경우 내용 다시 그리기
     elif event.type == "focus":
         print("focus", event.focused)</code></pre>
-<p>SDK 0.2.0의 <code>BoayoWindowState</code>는 읽는 순간의 불변 스냅샷입니다. 캡션 드래그로 각도 크기가 바뀌면 <code>resize</code>가 한 호출에서 창당 한 번 전달됩니다. 창 밖으로 드래그가 이어져도 감지합니다. 포커스 상태는 이벤트를 처리한 뒤 갱신됩니다. 각도 크기를 조절해도 앱 RGB 표면·내용 픽셀 수는 자동으로 변하지 않습니다. 외부 Bosio IPC로 직접 바꾼 기하 정보는 SDK 창 객체와 자동 동기화되지 않습니다.</p>
+<p><code>BoayoWindowState</code>는 읽는 시점의 창 상태를 복사한 값입니다. 캡션 조작으로 창의 각도 크기가 바뀌면 <code>resize</code> 이벤트가 <code>sdk.poll_events()</code> 호출당 창별로 최대 한 번 전달됩니다. 드래그가 창 밖으로 이어져도 변경을 감지합니다. 포커스 상태는 이벤트를 읽은 뒤 갱신됩니다. 각도 크기를 조절해도 RGB 이미지와 내용 영역의 픽셀 크기는 바뀌지 않습니다. SDK를 거치지 않고 Bosio IPC에서 직접 바꾼 창 위치·크기는 SDK 창 객체에 자동으로 반영되지 않습니다.</p>
 <h2>한 앱에서 여러 창</h2>
 <pre><code>with BoayoSDK("multi-view") as sdk:
     main = sdk.create_window("Main")
@@ -117,11 +118,11 @@ for event in sdk.poll_events():
             elif event.window_id == tools.window_id:
                 handle_tools(event)
         time.sleep(0.05)</code></pre>
-<p>이벤트는 앱의 SDK 연결에서 한 번만 읽고 창 ID별로 나눕니다. 앱이 정적 화면이라도 <code>sdk.poll_events()</code>를 계속 호출해야 닫기·이동·크기 조절에 반응합니다. 앱 목록 등록에는 <code>apps.json</code>의 실행 <code>command</code>가 필요합니다.</p>
+<p>한 앱에서 여러 창을 만들면 SDK가 이벤트를 한 번 읽어 창 ID별로 나눕니다. 이미지가 바뀌지 않는 앱도 <code>sdk.poll_events()</code>를 계속 호출해야 캡션의 닫기·이동·크기 조절이 작동합니다. 런처 목록에 앱을 표시하려면 <code>apps.json</code>에 실행 <code>command</code>를 등록해야 합니다.</p>
 <div class="callout"><strong>가져올 파일</strong><p>보드에서 런처 외부 앱을 직접 실행할 때 <code>/home/xilinx/bosio_v2/boayo</code>와 <code>/home/xilinx/bosio_v2</code>를 <code>PYTHONPATH</code>에 넣습니다. SDK와 예제의 원본은 <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/SDK_QUICKSTART.md">SDK 빠른 시작</a>, <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/boayo/boayo_pulse_app.py">Pulse 앱</a>, <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/examples/boayo_sdk_multiwindow.py">두 창 예제</a>에 있습니다.</p></div>
 </article>
       <div class="page-end">
-        <a href="sdk-reference.html"><span>다음 문서</span><strong>SDK API 참고서 →</strong></a>
+        <a href="sdk-reference.html"><span>다음 문서</span><strong>SDK 함수·이벤트 →</strong></a>
       </div>
       <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
     </main>

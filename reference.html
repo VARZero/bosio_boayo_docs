@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.">
-  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, API 레지스터 문서 소스">
+  <meta name="description" content="센서·앱·장면 데이터의 형식과 전달 경로, 개발 저장소를 정리했습니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, 데이터 형식 저장소 레지스터 API">
   <meta name="theme-color" content="#112b3a">
   <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/reference.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
-  <title>API와 소스 · BOSIO × BoAYo 문서</title>
+  <title>데이터와 소스 · BOSIO × BoAYo 문서</title>
 </head>
 <body data-page="reference">
   <a class="skip-link" href="#main">본문으로 건너뛰기</a>
@@ -46,31 +46,52 @@
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item" href="sdk.html">앱 SDK</a>
-          <a class="nav-item" href="sdk-reference.html">SDK API 참고서</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
             <div class="nav-group">운영</div>
           <a class="nav-item" href="deployment.html">배포와 부팅</a>
           <a class="nav-item" href="quality.html">화질과 성능</a>
-          <a class="nav-item active" href="reference.html" aria-current="page">API와 소스</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item active" href="reference.html" aria-current="page">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
-      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>운영</span><span aria-hidden="true">/</span><strong>API와 소스</strong></div>
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>참고</span><span aria-hidden="true">/</span><strong>데이터와 소스</strong></div>
       <div class="page-hero">
-        <div class="eyebrow">운영 <span>·</span> API와 소스</div>
-        <h1>계약과 원본 문서</h1>
-        <p>각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.</p>
+        <div class="eyebrow">참고 <span>·</span> 데이터와 소스</div>
+        <h1>데이터 형식과 원본 코드</h1>
+        <p>센서·앱·장면 데이터의 형식과 전달 경로, 개발 저장소를 정리했습니다.</p>
       </div>
-      <article class="article"><p class="lead">이 사이트는 전체 흐름을 읽는 입구입니다. 정확한 함수 인자, 레지스터 필드, 배포 스크립트의 현재 옵션은 아래 원본 개발 저장소에서 확인하세요.</p>
-<h2>원본 저장소</h2>
-<table><thead><tr><th>저장소</th><th>무엇이 들어 있나</th><th>바로가기</th></tr></thead><tbody><tr><td>bosio_OutputCore</td><td>정이십면체 출력 RTL, 투영·AA, PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">소스</a></td></tr><tr><td>bosio_SphericalWM</td><td>GY-521 센서 허브 RTL, Bosio 데몬, IPC, C++/NEON 합성, bitstream</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">소스</a></td></tr><tr><td>bosio_BoAYO</td><td>런처, apps.json, BoayoSDK, 앱 예제, 배포 도구</td><td><a href="https://github.com/VARZero/bosio_BoAYO">소스</a></td></tr><tr><td>bosio_FullStack</td><td>세 소스의 고정된 커밋, 보드 통합 배포·상태 확인</td><td><a href="https://github.com/VARZero/bosio_FullStack">소스</a></td></tr></tbody></table>
-<h2>주요 데이터 계약</h2>
-<table><thead><tr><th>계약</th><th>형식</th><th>소유자</th></tr></thead><tbody><tr><td>센서 자세</td><td>96비트 AXI4-Stream, signed int32 yaw/pitch/roll mrad</td><td>센서 허브 → OutputCore</td></tr><tr><td>수동 투영 계수</td><td>Q24 고정 소수점, 프레임 경계 적용</td><td>PYNQ 드라이버 → OutputCore</td></tr><tr><td>앱 표면</td><td>높이×너비×3 NumPy RGB24</td><td>BoayoSDK → Bosio</td></tr><tr><td>창 배치</td><td>구면 각도 위치·너비·높이, 포커스/z</td><td>Bosio 데몬</td></tr><tr><td>장면 셀</td><td>20면×211타일×M² 셀, RGB332 팔레트</td><td>Bosio 합성 → OutputCore</td></tr><tr><td>부분 갱신</td><td>BPT1 dirty tile patch 또는 전체 snapshot</td><td>Bosio 합성 → OutputCore</td></tr><tr><td>윈도우 IPC</td><td>Unix 소켓 JSON, <code>/tmp/bosio-wm.sock</code></td><td>앱/BoAYo → Bosio</td></tr></tbody></table>
-<h2>원본 문서와 예제</h2>
-<ul><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/GY521_SENSOR_HUB.md">GY-521 핀·센서 허브와 AXI 데이터</a></li><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_BUTTONS.md">보드 버튼 독립 입력과 데몬 이벤트</a></li><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_ANTIALIASING.md">투영 및 출력 AA</a></li><li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/ARCHITECTURE.md">BoAYo 패널·앱 창 구조</a></li><li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/SDK_QUICKSTART.md">BoayoSDK 빠른 시작</a></li><li><a href="https://github.com/VARZero/bosio_FullStack">통합 설치와 서비스 실행</a></li></ul>
-<p>구현을 변경했다면 문서의 설명과 원본 저장소의 코드·README를 함께 갱신해 주세요. 각 구성 요소의 라이선스는 해당 저장소에서 확인할 수 있습니다.</p>
-<p>BoAYo SDK 0.2.0은 <code>sdk.window_state(window)</code>로 창의 각도 크기·표면과 내용 픽셀 크기·포커스를 반환합니다. <code>sdk.poll_events()</code>는 캡션에 따른 <code>resize</code>와 Bosio <code>focus</code> 이벤트를 창별로 제공합니다. <a href="sdk.html">앱 SDK 예제</a>를 참고하세요.</p>
-<p>SDK 함수·인자·이벤트 필드의 전체 설명은 <a href="sdk-reference.html">SDK API 참고서</a>에 있습니다.</p>
+      <article class="article"><p class="lead">이 페이지는 각 저장소에 무엇이 들어 있는지, 센서와 앱의 데이터가 어떤 형식으로 어디에 전달되는지 정리합니다. 함수 인자나 레지스터 값처럼 구현에 따라 달라질 수 있는 내용은 링크한 원본 코드와 문서에서 확인하세요.</p>
+<h2>개발 저장소</h2>
+<table><thead><tr><th>저장소</th><th>주요 내용</th><th>원본 코드</th></tr></thead><tbody>
+<tr><td>bosio_OutputCore</td><td>정이십면체 출력 코어 RTL, 투영, 안티에일리어싱, PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">저장소 열기</a></td></tr>
+<tr><td>bosio_SphericalWM</td><td>GY-521 센서 허브 RTL, Bosio 창 관리자, C++/NEON 합성기, 비트스트림</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">저장소 열기</a></td></tr>
+<tr><td>bosio_BoAYO</td><td>런처, <code>apps.json</code>, BoAYo SDK, 앱 예제와 배포 도구</td><td><a href="https://github.com/VARZero/bosio_BoAYO">저장소 열기</a></td></tr>
+<tr><td>bosio_FullStack</td><td>세 저장소의 버전을 고정하고 보드에 함께 배포하는 도구</td><td><a href="https://github.com/VARZero/bosio_FullStack">저장소 열기</a></td></tr>
+</tbody></table>
+<h2>데이터 형식과 전달 경로</h2>
+<p>여기서 <strong>장면</strong>은 Bosio가 여러 창을 합성해 정이십면체 프레임버퍼에 저장한 결과를 뜻합니다. 아래 표는 장면을 만드는 입력부터 출력 코어에 전달되는 데이터까지 이어집니다.</p>
+<table><thead><tr><th>데이터</th><th>형식</th><th>전달·처리 경로</th></tr></thead><tbody>
+<tr><td>센서 자세</td><td>96비트 AXI4-Stream. yaw·pitch·roll 각각 부호 있는 32비트 정수, 단위 mrad</td><td>GY-521 → FPGA 센서 허브 → 출력 코어</td></tr>
+<tr><td>수동 투영 계수</td><td>Q24 고정소수점 값. 출력 코어가 영상 프레임 경계에서 적용</td><td>PYNQ 드라이버 → 출력 코어</td></tr>
+<tr><td>앱 이미지</td><td>높이 × 너비 × 3의 NumPy RGB24 배열</td><td>앱 → BoAYo SDK → Bosio 창 관리자</td></tr>
+<tr><td>창 위치와 크기</td><td>구면 중심 위치와 가로·세로 각도, 포커스와 창 겹침 순서</td><td>Bosio 창 관리자에서 처리</td></tr>
+<tr><td>정이십면체 장면</td><td>20면 × 면당 211타일 × 타일당 M² 삼각 셀, RGB332 색상표</td><td>Bosio 합성기 → 출력 코어</td></tr>
+<tr><td>장면의 일부 갱신</td><td>바뀐 타일만 담은 BPT1 데이터. 필요한 경우 전체 장면을 다시 전송</td><td>Bosio 합성기 → 출력 코어</td></tr>
+<tr><td>창 제어 메시지</td><td>JSON 메시지, Unix 도메인 소켓 <code>/tmp/bosio-wm.sock</code></td><td>앱·BoAYo SDK ↔ Bosio 창 관리자</td></tr>
+</tbody></table>
+<h2>더 자세히 읽을 문서</h2>
+<ul>
+<li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/GY521_SENSOR_HUB.md">GY-521 배선과 센서 허브</a></li>
+<li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_BUTTONS.md">PYNQ-Z2 버튼 입력과 이벤트</a></li>
+<li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_ANTIALIASING.md">투영·출력 단계의 안티에일리어싱</a></li>
+<li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/ARCHITECTURE.md">BoAYo 런처 패널과 앱 창</a></li>
+<li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/SDK_QUICKSTART.md">BoAYo 앱 작성 빠른 시작</a></li>
+<li><a href="sdk-reference.html">BoAYo SDK 함수와 이벤트 안내</a></li>
+<li><a href="https://github.com/VARZero/bosio_FullStack">통합 설치와 부팅 설정</a></li>
+</ul>
+<p>앱 창의 크기·포커스를 읽거나 변경 이벤트를 처리하려면 <a href="sdk.html">앱 작성 예제</a>를 먼저 보고, 함수별 설명은 <a href="sdk-reference.html">SDK 안내</a>에서 확인하세요. 각 구성 요소의 라이선스와 최신 소스는 해당 저장소에 있습니다.</p>
 </article>
       <div class="page-end">
       </div>

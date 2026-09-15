@@ -24,6 +24,7 @@
   if (!headings.length) document.querySelector('.toc')?.remove();
 
   document.querySelectorAll('.article table').forEach(table => {
+    if (table.parentElement?.classList.contains('table-scroll')) return;
     const wrapper = document.createElement('div');
     wrapper.className = 'table-scroll';
     table.replaceWith(wrapper);

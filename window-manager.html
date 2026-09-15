@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.">
+  <meta name="description" content="창 입력과 포커스, C++/NEON 합성, 바뀐 타일만 보내는 BPT1 갱신을 설명합니다.">
   <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, IPC 합성 포커스 NEON BPT1">
   <meta name="theme-color" content="#112b3a">
   <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/window-manager.html">
@@ -46,31 +46,32 @@
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item" href="sdk.html">앱 SDK</a>
-          <a class="nav-item" href="sdk-reference.html">SDK API 참고서</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
             <div class="nav-group">운영</div>
           <a class="nav-item" href="deployment.html">배포와 부팅</a>
           <a class="nav-item" href="quality.html">화질과 성능</a>
-          <a class="nav-item" href="reference.html">API와 소스</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>핵심 시스템</span><span aria-hidden="true">/</span><strong>Bosio 창 관리자</strong></div>
       <div class="page-hero">
         <div class="eyebrow">핵심 시스템 <span>·</span> Bosio 창 관리자</div>
         <h1>구면 창과 부분 갱신</h1>
-        <p>IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.</p>
+        <p>창 입력과 포커스, C++/NEON 합성, 바뀐 타일만 보내는 BPT1 갱신을 설명합니다.</p>
       </div>
-      <article class="article"><p class="lead">Bosio 창 관리자는 앱 표면을 구면 위치에 배치하고, 겹침·포커스·입력을 처리한 뒤 정이십면체 셀 장면을 만듭니다. OutputCore가 그 장면을 현재 자세로 화면에 투영합니다.</p>
+      <article class="article"><p class="lead">Bosio 창 관리자는 앱 이미지를 구면 위치에 놓고 창 겹침·포커스·입력을 처리합니다. 그 결과를 정이십면체 삼각 셀에 합성하면 출력 코어가 현재 자세에서 필요한 셀을 읽어 화면에 표시합니다.</p>
 <h2>창과 IPC</h2>
-<p>데몬은 Unix 소켓 <code>/tmp/bosio-wm.sock</code>에서 JSON IPC를 받습니다. 앱은 클라이언트 API로 구면 각도 위치의 창을 만들고 RGB 표면을 전달하며 이벤트를 읽습니다. 여러 독립 프로세스의 창은 z 순서와 포커스로 관리됩니다. BoAYo SDK는 이 API를 감싸서 앱 창에 캡션 규칙을 붙입니다.</p>
+<p>데몬은 Unix 도메인 소켓 <code>/tmp/bosio-wm.sock</code>으로 JSON 메시지를 받습니다. 앱은 이 프로세스 간 통신(IPC)으로 구면 창을 만들고 RGB 이미지를 보내며 입력 이벤트를 읽습니다. 창 관리자는 여러 앱의 창이 겹치는 순서와 포커스를 관리합니다. BoAYo SDK는 이 기능에 앱 창의 아래 캡션을 덧붙입니다.</p>
 <h2>합성에서 출력 코어까지</h2>
 <div class="flow"><span>앱 RGB24 표면</span><span>구면 창 겹침</span><span>C++/NEON 셀 합성</span><span>RGB332 장면</span><span>BPT1 또는 전체 갱신</span><span>OutputCore</span></div>
-<p>네이티브 C++ 합성기는 ARM NEON을 활용합니다. 창의 작은 영역이 바뀌면 AA 샘플 범위에 겹치는 dirty 셀만 재합성해 BPT1 패치를 보냅니다. 위치·크기·겹침이 바뀌거나 부분 갱신으로 아래 장면의 색을 정확히 보존하기 어려울 때는 전체 스냅샷을 보냅니다. 데몬이 최종 구면 장면의 소유자이므로 앱 프로세스가 전체 프레임버퍼를 점유하지 않습니다.</p>
+<p>C++ 합성기는 ARM의 NEON 명령을 사용합니다. 창 내용의 일부가 바뀌면 안티에일리어싱에 쓰이는 픽셀 범위와 겹치는 삼각 셀만 다시 합성해 BPT1 데이터로 보냅니다. 창 위치·크기·겹침이 바뀌거나 아래 창의 색을 다시 계산해야 할 때는 전체 장면을 보냅니다. 정이십면체 프레임버퍼는 Bosio 창 관리자가 관리하므로 앱 하나가 화면 전체를 차지하지 않습니다.</p>
 <h2>입력과 포커스</h2>
-<p>마우스 이벤트와 BTN2 시선 클릭은 같은 포인터 경로로 들어옵니다. 클릭 위치에서 가장 위의 창을 선택하고 이벤트를 해당 앱에 보냅니다. 유일한 BoAYo 런처 패널은 다른 앱 창보다 위에 놓이지만, 흰 패널 영역 밖을 클릭하면 패널만 접히고 해당 위치에 앱 창이 있으면 그 클릭도 전달됩니다. 기존 앱 창은 계속 남습니다.</p>
+<p>마우스 클릭과 BTN2 시선 클릭은 같은 창 입력 경로로 처리됩니다. 클릭한 위치에서 가장 위에 있는 창에 포커스를 주고 해당 앱으로 이벤트를 보냅니다. BoAYo 런처 패널은 앱 창 위에 표시되지만, 패널 바깥을 클릭하면 패널만 닫힙니다. 그 위치에 앱 창이 있다면 클릭도 그 앱에 전달되고 기존 창은 계속 남습니다.</p>
 <h2>장면 갱신 속도와 영상 속도</h2>
-<p>HDMI 픽셀 스트림의 프레임 속도와 앱 내용이 바뀌는 속도는 다릅니다. 고정된 장면은 출력 코어가 계속 다시 투영하며, 창의 변경 내용은 Bosio 합성과 전송이 끝날 때 반영됩니다. AA와 dirty tile 성능의 의미는 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p>
+<p>출력 코어는 저장된 장면을 읽어 HDMI 영상을 계속 만듭니다. 창 내용의 변경은 Bosio가 필요한 셀을 합성하고 출력 코어에 보낸 뒤 화면에 나타납니다. HDMI 출력 프레임률과 창 내용 갱신 속도의 차이는 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p>
 <div class="callout"><strong>개발 소스</strong><p><a href="https://github.com/VARZero/bosio_SphericalWM">bosio_SphericalWM</a>에 WM 데몬, IPC 클라이언트, 네이티브 합성기, 부분 갱신, 보드 서비스와 센서 허브 RTL이 함께 있습니다.</p></div>
 </article>
       <div class="page-end">
