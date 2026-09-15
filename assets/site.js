@@ -23,6 +23,13 @@
   });
   if (!headings.length) document.querySelector('.toc')?.remove();
 
+  document.querySelectorAll('.article table').forEach(table => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-scroll';
+    table.replaceWith(wrapper);
+    wrapper.append(table);
+  });
+
   document.querySelectorAll('.article pre').forEach(pre => {
     const button = document.createElement('button');
     button.type = 'button';

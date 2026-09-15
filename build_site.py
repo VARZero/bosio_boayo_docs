@@ -22,6 +22,7 @@ PAGES = [
     ("window-manager", "핵심 시스템", "Bosio 창 관리자", "구면 창과 부분 갱신", "IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.", "IPC 합성 포커스 NEON BPT1"),
     ("boayo", "앱과 UI", "BoAYo 데스크톱", "패널과 앱 캡션", "런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.", "런처 패널 캡션 BTN2 앱"),
     ("sdk", "앱과 UI", "앱 SDK", "내 앱에 구면 창 붙이기", "BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.", "BoayoSDK Python API 예제"),
+    ("sdk-reference", "앱과 UI", "SDK API 참고서", "함수와 이벤트 계약", "창 생명주기, 공개 함수, 상태 필드와 이벤트의 정확한 의미를 찾아봅니다.", "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"),
     ("deployment", "운영", "배포와 부팅", "FullStack 실행 절차", "세 저장소와 통합 저장소, 자동 시작 서비스 및 업데이트 흐름입니다.", "FullStack GitHub 부팅 서비스 배포"),
     ("quality", "운영", "화질과 성능", "AA · 해상도 · 검증", "M=16의 화질 한계, 두 단계 AA와 실제 확인 지표를 구분합니다.", "AA FPS 성능 투영 RGB332"),
     ("reference", "운영", "API와 소스", "계약과 원본 문서", "각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.", "API 레지스터 문서 소스"),

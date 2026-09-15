@@ -63,6 +63,13 @@
     "keywords": "BoayoSDK Python API 예제"
   },
   {
+    "url": "sdk-reference.html",
+    "label": "SDK API 참고서",
+    "title": "함수와 이벤트 계약",
+    "summary": "창 생명주기, 공개 함수, 상태 필드와 이벤트의 정확한 의미를 찾아봅니다.",
+    "keywords": "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"
+  },
+  {
     "url": "deployment.html",
     "label": "배포와 부팅",
     "title": "FullStack 실행 절차",
