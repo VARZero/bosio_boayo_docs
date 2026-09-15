@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, 런처 패널 캡션 BTN2 앱">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/boayo.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>BoAYo 데스크톱 · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="boayo">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+            <div class="nav-group">시작</div>
+          <a class="nav-item" href="./">전체 소개</a>
+          <a class="nav-item" href="quickstart.html">빠른 시작</a>
+          <a class="nav-item" href="architecture.html">시스템 구조</a>
+            <div class="nav-group">핵심 시스템</div>
+          <a class="nav-item" href="geometry.html">정이십면체 장면</a>
+          <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
+          <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
+            <div class="nav-group">앱과 UI</div>
+          <a class="nav-item active" href="boayo.html" aria-current="page">BoAYo 데스크톱</a>
+          <a class="nav-item" href="sdk.html">앱 SDK</a>
+            <div class="nav-group">운영</div>
+          <a class="nav-item" href="deployment.html">배포와 부팅</a>
+          <a class="nav-item" href="quality.html">화질과 성능</a>
+          <a class="nav-item" href="reference.html">API와 소스</a>
+      </nav>
+      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>앱과 UI</span><span aria-hidden="true">/</span><strong>BoAYo 데스크톱</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">앱과 UI <span>·</span> BoAYo 데스크톱</div>
+        <h1>패널과 앱 캡션</h1>
+        <p>런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.</p>
+      </div>
+      <article class="article"><p class="lead">BoAYo는 Bosio 스택 위에서 동작하는 데스크톱 UI입니다. 런처 <strong>패널</strong>과 앱 창 아래의 <strong>캡션</strong>은 다른 요소입니다. 패널은 하나이고 캡션이 없으며, 앱 창은 여러 개이고 각각 캡션을 가질 수 있습니다.</p>
+<h2>런처 패널</h2>
+<p>BTN0 또는 BTN1을 누르면 현재 시선에 패널이 새로 열립니다. 이전 패널은 제거되므로 동시에 여러 패널이 생기지 않습니다. 패널은 항상 다른 앱 창 위에 표시됩니다. 등록된 앱 목록은 JSON <code>apps.json</code>에서 읽으며 실제 실행 명령이 있는 항목만 표시합니다.</p>
+<p>BTN2 또는 마우스로 앱을 선택하면 등록된 명령이 독립 프로세스로 실행되고 SDK가 현재 위치에 새 창을 만듭니다. 중간 실행 대기 화면을 오래 유지하지 않습니다. 앱 시작 뒤 패널은 접히고 기존 앱 창은 그대로 남습니다. 흰 패널 바깥의 여백이나 다른 구면 위치를 클릭하면 <em>패널만</em> 닫힙니다.</p>
+<h2>앱 창의 캡션</h2>
+<p>캡션은 창 <strong>아래</strong>에 그려지는 BoAYo UI 버튼 상자입니다. 기본 Bosio 상단 제목·테두리는 앱 창에 붙이지 않습니다. 창 내부의 가짜 커서 원도 표시하지 않습니다. 캡션 버튼은 창 너비에 맞춰 배치되며, 좁은 창에서도 양끝 조작부가 창 바깥으로 나가지 않도록 합니다.</p>
+<table><thead><tr><th>영역</th><th>짧은 클릭</th><th>누른 채 이동</th></tr></thead><tbody><tr><td>빨간 아래쪽 삼각형</td><td>그 앱 창 닫기</td><td>닫기 동작은 놓을 때 확정</td></tr><tr><td>가운데 회색 버튼</td><td>창 포커스</td><td>구면 위치 이동</td></tr><tr><td>왼쪽·오른쪽 버튼</td><td>창 포커스</td><td>창 각도 너비·높이 조절</td></tr></tbody></table>
+<p>BTN2를 누르고 있는 동안에는 시선 중심으로 캡션을 드래그할 수 있고, 버튼을 떼면 드래그가 끝납니다. USB 마우스 왼쪽 버튼도 지원합니다. UI 동작의 원본 구현은 <a href="https://github.com/VARZero/bosio_BoAYO">BoAYo 소스</a>와 <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/ARCHITECTURE.md">구조 문서</a>에서 볼 수 있습니다.</p>
+<div class="callout"><strong>투명도</strong><p>현재 앱 표면·장면 전달 형식은 RGB24입니다. 픽셀별 알파 투명도는 제공하지 않으므로 캡션은 배경을 가진 상자로 그립니다. 경계는 소프트웨어 AA로 부드럽게 만들 수 있지만 그 자체가 실제 알파 채널은 아닙니다.</p></div>
+</article>
+      <div class="page-end">
+        <a href="sdk.html"><span>다음 문서</span><strong>앱 SDK →</strong></a>
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

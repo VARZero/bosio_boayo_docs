@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, API 레지스터 문서 소스">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/reference.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>API와 소스 · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="reference">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+            <div class="nav-group">시작</div>
+          <a class="nav-item" href="./">전체 소개</a>
+          <a class="nav-item" href="quickstart.html">빠른 시작</a>
+          <a class="nav-item" href="architecture.html">시스템 구조</a>
+            <div class="nav-group">핵심 시스템</div>
+          <a class="nav-item" href="geometry.html">정이십면체 장면</a>
+          <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
+          <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
+            <div class="nav-group">앱과 UI</div>
+          <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
+          <a class="nav-item" href="sdk.html">앱 SDK</a>
+            <div class="nav-group">운영</div>
+          <a class="nav-item" href="deployment.html">배포와 부팅</a>
+          <a class="nav-item" href="quality.html">화질과 성능</a>
+          <a class="nav-item active" href="reference.html" aria-current="page">API와 소스</a>
+      </nav>
+      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>운영</span><span aria-hidden="true">/</span><strong>API와 소스</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">운영 <span>·</span> API와 소스</div>
+        <h1>계약과 원본 문서</h1>
+        <p>각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.</p>
+      </div>
+      <article class="article"><p class="lead">이 사이트는 전체 흐름을 읽는 입구입니다. 정확한 함수 인자, 레지스터 필드, 배포 스크립트의 현재 옵션은 아래 원본 개발 저장소에서 확인하세요.</p>
+<h2>원본 저장소</h2>
+<table><thead><tr><th>저장소</th><th>무엇이 들어 있나</th><th>바로가기</th></tr></thead><tbody><tr><td>bosio_OutputCore</td><td>정이십면체 출력 RTL, 투영·AA, PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">소스</a></td></tr><tr><td>bosio_SphericalWM</td><td>GY-521 센서 허브 RTL, Bosio 데몬, IPC, C++/NEON 합성, bitstream</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">소스</a></td></tr><tr><td>bosio_BoAYO</td><td>런처, apps.json, BoayoSDK, 앱 예제, 배포 도구</td><td><a href="https://github.com/VARZero/bosio_BoAYO">소스</a></td></tr><tr><td>bosio_FullStack</td><td>세 소스의 고정된 커밋, 보드 통합 배포·상태 확인</td><td><a href="https://github.com/VARZero/bosio_FullStack">소스</a></td></tr></tbody></table>
+<h2>주요 데이터 계약</h2>
+<table><thead><tr><th>계약</th><th>형식</th><th>소유자</th></tr></thead><tbody><tr><td>센서 자세</td><td>96비트 AXI4-Stream, signed int32 yaw/pitch/roll mrad</td><td>센서 허브 → OutputCore</td></tr><tr><td>수동 투영 계수</td><td>Q24 고정 소수점, 프레임 경계 적용</td><td>PYNQ 드라이버 → OutputCore</td></tr><tr><td>앱 표면</td><td>높이×너비×3 NumPy RGB24</td><td>BoayoSDK → Bosio</td></tr><tr><td>창 배치</td><td>구면 각도 위치·너비·높이, 포커스/z</td><td>Bosio 데몬</td></tr><tr><td>장면 셀</td><td>20면×211타일×M² 셀, RGB332 팔레트</td><td>Bosio 합성 → OutputCore</td></tr><tr><td>부분 갱신</td><td>BPT1 dirty tile patch 또는 전체 snapshot</td><td>Bosio 합성 → OutputCore</td></tr><tr><td>윈도우 IPC</td><td>Unix 소켓 JSON, <code>/tmp/bosio-wm.sock</code></td><td>앱/BoAYo → Bosio</td></tr></tbody></table>
+<h2>원본 문서와 예제</h2>
+<ul><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/GY521_SENSOR_HUB.md">GY-521 핀·센서 허브와 AXI 데이터</a></li><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_BUTTONS.md">보드 버튼 독립 입력과 데몬 이벤트</a></li><li><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_ANTIALIASING.md">투영 및 출력 AA</a></li><li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/ARCHITECTURE.md">BoAYo 패널·앱 창 구조</a></li><li><a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/SDK_QUICKSTART.md">BoayoSDK 빠른 시작</a></li><li><a href="https://github.com/VARZero/bosio_FullStack">통합 설치와 서비스 실행</a></li></ul>
+<p>구현을 변경했다면 문서의 설명과 원본 저장소의 코드·README를 함께 갱신해 주세요. 각 구성 요소의 라이선스는 해당 저장소에서 확인할 수 있습니다.</p>
+</article>
+      <div class="page-end">
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

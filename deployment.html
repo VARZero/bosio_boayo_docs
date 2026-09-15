@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="세 저장소와 통합 저장소, 자동 시작 서비스 및 업데이트 흐름입니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, FullStack GitHub 부팅 서비스 배포">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/deployment.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>배포와 부팅 · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="deployment">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+            <div class="nav-group">시작</div>
+          <a class="nav-item" href="./">전체 소개</a>
+          <a class="nav-item" href="quickstart.html">빠른 시작</a>
+          <a class="nav-item" href="architecture.html">시스템 구조</a>
+            <div class="nav-group">핵심 시스템</div>
+          <a class="nav-item" href="geometry.html">정이십면체 장면</a>
+          <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
+          <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
+            <div class="nav-group">앱과 UI</div>
+          <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
+          <a class="nav-item" href="sdk.html">앱 SDK</a>
+            <div class="nav-group">운영</div>
+          <a class="nav-item active" href="deployment.html" aria-current="page">배포와 부팅</a>
+          <a class="nav-item" href="quality.html">화질과 성능</a>
+          <a class="nav-item" href="reference.html">API와 소스</a>
+      </nav>
+      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>운영</span><span aria-hidden="true">/</span><strong>배포와 부팅</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">운영 <span>·</span> 배포와 부팅</div>
+        <h1>FullStack 실행 절차</h1>
+        <p>세 저장소와 통합 저장소, 자동 시작 서비스 및 업데이트 흐름입니다.</p>
+      </div>
+      <article class="article"><p class="lead">FullStack 저장소는 세 개발 저장소의 검증된 커밋을 서브모듈로 고정하고 PYNQ-Z2에 bitstream, Bosio 데몬, BoAYo 런처·SDK를 차례로 올립니다.</p>
+<h2>복제와 배포</h2>
+<pre><code>git clone --recursive https://github.com/VARZero/bosio_FullStack.git
+cd bosio_FullStack
+python -m pip install -r requirements.txt
+
+# Windows PowerShell
+$env:BOSIO_PYNQ_HOST = "192.168.2.99"
+$env:BOSIO_PYNQ_USER = "xilinx"
+$env:BOSIO_PYNQ_PASSWORD = "&lt;보드 비밀번호&gt;"
+python scripts/bosio_stack.py deploy-start
+python scripts/bosio_stack.py status</code></pre>
+<p>IP 주소는 현재 테스트 보드의 예시이며 네 환경에 맞게 바꿀 수 있습니다. 암호는 환경 변수로만 넣고 소스·문서·Git 커밋에는 기록하지 않습니다. SSH 키 로그인도 지원합니다.</p>
+<h2>부팅 자동 시작</h2>
+<p>설치 후 <code>bosio-window-manager.service</code>가 구면 장면과 IPC를 맡고, 그 뒤 <code>boayo-desktop.service</code>가 런처 패널을 Bosio 창으로 등록합니다. 두 서비스는 systemd에서 부팅 자동 시작됩니다. 앱은 <code>apps.json</code>의 명령으로 별도 프로세스로 시작됩니다.</p>
+<pre><code># 보드에서 직접 확인
+systemctl is-active bosio-window-manager.service
+systemctl is-active boayo-desktop.service
+systemctl status bosio-window-manager.service boayo-desktop.service
+journalctl -u bosio-window-manager.service -u boayo-desktop.service -n 100 --no-pager</code></pre>
+<h2>문제가 있을 때 확인 순서</h2>
+<ol><li>SSH 접속과 두 서비스의 active 상태를 확인합니다.</li><li>통합 상태 출력에서 출력 코어 오류, 장면 유효성, 런처 등록을 확인합니다.</li><li>센서가 있다면 보정 완료와 패킷 수 증가를 확인합니다.</li><li>HDMI 케이블과 캡처 장치 연결, 보드 출력 모드를 확인합니다.</li><li>런처가 없으면 BoAYo 서비스 로그를, 창 내용만 검정이면 앱 로그와 SDK 연결을 확인합니다.</li></ol>
+<p>새 RTL을 다시 빌드하는 절차는 현재 확인된 bitstream을 그대로 배포하는 이 빠른 경로와 다릅니다. OutputCore RTL과 SphericalWM 하드웨어 빌드 스크립트를 변경했다면 새 bitstream을 검증한 뒤 통합 배포를 갱신하세요. <a href="https://github.com/VARZero/bosio_FullStack">통합 저장소</a>의 README와 스크립트가 최신 실행 계약입니다.</p>
+</article>
+      <div class="page-end">
+        <a href="quality.html"><span>다음 문서</span><strong>화질과 성능 →</strong></a>
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

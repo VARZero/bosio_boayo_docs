@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ summary }}">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, {{ keywords }}">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="{{ canonical }}">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>{{ label }} · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="{{ slug }}">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+        {% set ns = namespace(group='') %}
+        {% for item in pages %}
+          {% if item[1] != ns.group %}
+            {% set ns.group = item[1] %}
+            <div class="nav-group">{{ ns.group }}</div>
+          {% endif %}
+          <a class="nav-item{% if slug == item[0] %} active{% endif %}" href="{% if item[0] == 'index' %}./{% else %}{{ item[0] }}.html{% endif %}"{% if slug == item[0] %} aria-current="page"{% endif %}>{{ item[2] }}</a>
+        {% endfor %}
+      </nav>
+      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>{{ group }}</span><span aria-hidden="true">/</span><strong>{{ label }}</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">{{ group }} <span>·</span> {{ label }}</div>
+        <h1>{{ title }}</h1>
+        <p>{{ summary }}</p>
+      </div>
+      <article class="article">{{ content }}</article>
+      <div class="page-end">
+        {% for item in pages %}{% if item[0] == slug and not loop.last %}
+        <a href="{{ pages[loop.index][0] }}.html"><span>다음 문서</span><strong>{{ pages[loop.index][2] }} →</strong></a>
+        {% endif %}{% endfor %}
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

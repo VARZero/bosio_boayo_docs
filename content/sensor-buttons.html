@@ -1,0 +1,11 @@
+<p class="lead">GY-521의 자세 데이터는 실시간 경로에서 Linux를 거치지 않습니다. FPGA 센서 허브가 I²C로 읽고 AXI4-Stream으로 출력 코어에 전달합니다. 보드 버튼은 별도 AXI GPIO를 Linux 데몬이 읽습니다.</p>
+<h2>GY-521 연결</h2>
+<table><thead><tr><th>GY-521</th><th>PYNQ-Z2 Pmod B</th><th>비고</th></tr></thead><tbody><tr><td>VCC</td><td>3V3</td><td>5V를 연결하지 않습니다</td></tr><tr><td>GND</td><td>GND</td><td>공통 접지</td></tr><tr><td>SDA</td><td>JB 물리 3번, JB2_P</td><td>FPGA T11</td></tr><tr><td>SCL</td><td>JB 물리 4번, JB2_N</td><td>FPGA T10</td></tr><tr><td>AD0</td><td>GND 또는 미연결</td><td>기본 I²C 주소</td></tr><tr><td>INT</td><td>미연결</td><td>현재 미사용</td></tr></tbody></table>
+<h2>실시간 자세 경로</h2>
+<div class="flow"><span>MPU6050</span><span>FPGA I²C 센서 허브</span><span>mrad 자세 AXI4-Stream</span><span>출력 코어</span><span>HDMI</span></div>
+<p>허브가 센서를 초기화하고 14바이트 측정 값을 반복해서 읽습니다. 시작 때 256회 자이로 샘플을 모아 오프셋을 보정하며, 보통 약 2.7초 뒤 약 100Hz로 자세 패킷을 만듭니다. 자이로와 가속도를 상보 필터로 결합합니다. 자기계가 없으므로 yaw는 장시간 누적 드리프트가 생길 수 있습니다.</p>
+<p>각도의 단위는 signed int32 mrad입니다. 양수/음수 방향이 설치 방향과 어긋나면 출력 코어의 축별 반전 레지스터를 사용할 수 있습니다. <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/GY521_SENSOR_HUB.md">배선·보정 원본 문서</a>를 연결 전에 참고하세요.</p>
+<h2>PYNQ-Z2 버튼</h2>
+<p>BTN0~BTN3는 출력 코어·센서 허브에서 분리된 4비트 AXI GPIO 입력입니다. 현재 bitstream에서 기본 주소는 <code>0x41200000</code>이고, Bosio 데몬은 눌림/뗌 이벤트를 전역으로 제공합니다. 앱마다 이벤트 커서가 따로 있어 한 앱이 읽는다고 다른 앱의 이벤트가 사라지지 않습니다.</p>
+<table><thead><tr><th>버튼</th><th>현재 BoAYo 동작</th></tr></thead><tbody><tr><td>BTN0 / BTN1</td><td>현재 시선에 유일한 런처 패널 다시 열기</td></tr><tr><td>BTN2</td><td>시선 중심 클릭, 길게 누르면 캡션 드래그</td></tr><tr><td>BTN3</td><td>입력 이벤트는 제공, 기본 UI 동작은 별도 설정 가능</td></tr></tbody></table>
+<p>USB 마우스가 있다면 왼쪽 버튼도 같은 클릭·드래그 경로를 사용합니다. 입력 장치를 서비스 시작 뒤에 연결했다면 서비스를 재시작해 장치를 다시 검색하세요. <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_BUTTONS.md">버튼 독립 입력 문서</a>에 핀과 Linux 단독 확인 절차가 있습니다.</p>

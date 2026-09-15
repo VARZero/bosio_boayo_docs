@@ -1,0 +1,19 @@
+<p class="lead">정이십면체의 20개 면을 작은 삼각 타일로 나눕니다. <strong>작은 삼각형 하나가 타일</strong>이고, 현재는 그 타일의 한 변을 M=16으로 다시 나눈 작은 삼각 셀을 색 저장 단위로 사용합니다.</p>
+<div class="metric-strip"><div class="metric"><strong>20</strong><span>면</span></div><div class="metric"><strong>4,220</strong><span>전체 타일: 20×211</span></div><div class="metric"><strong>1,080,320</strong><span>M=16일 때 전체 셀 수</span></div></div>
+<h2>면 안의 7·7·7·8 분할</h2>
+<p>각 면의 타일 네 영역은 변 분할도 7, 7, 7, 8을 갖습니다. 영역별 삼각 타일 수는 각각 49, 49, 49, 64개이므로 면당 총 211개입니다.</p>
+<pre><code>면당 타일 = 7² + 7² + 7² + 8² = 211
+전체 타일 = 20 × 211 = 4,220
+타일당 작은 삼각 셀 = M²
+M=16 → 타일당 256셀, 전체 1,080,320셀</code></pre>
+<div class="callout"><strong>타일과 셀을 구분합니다</strong><p>7·7·7·8에서 세는 작은 삼각형은 <em>타일</em>입니다. 그 타일 안에서 M을 사용해 쪼갠 삼각형은 색을 가진 <em>셀</em>입니다. M을 올리면 한 타일의 셀 수가 M²에 따라 증가합니다.</p></div>
+<h2>현재 해상도와 확장</h2>
+<div class="table-scroll"><table><thead><tr><th>M</th><th>타일당 셀</th><th>전체 셀</th><th>현재 용도</th></tr></thead><tbody><tr><td>8</td><td>64</td><td>270,080</td><td>낮은 분할도 실험</td></tr><tr><td>16</td><td>256</td><td>1,080,320</td><td>실사용 기본값</td></tr><tr><td>32</td><td>1,024</td><td>4,321,280</td><td>높은 분할도 선택 가능; 자원·합성 속도 고려 필요</td></tr></tbody></table></div>
+<p>출력 코어에는 M=8/16/32 선택이 있으나, 현재 통합 실행은 M=16입니다. M=32로 올리는 것만으로 사용 가능한 앱 글꼴 품질이 자동 개선되는 것은 아닙니다. 더 많은 셀을 채우고 전송하는 비용까지 함께 늘어납니다.</p>
+<h2>타일 내부 셀 인덱스</h2>
+<p>타일 안의 셀은 행 우선으로 저장되며, 두 방향의 삼각형이 번갈아 나타납니다. 행 마지막에는 한 방향만 남습니다.</p>
+<pre><code>cell_index = row² + 2 × column + orientation
+row = 0 … M-1
+orientation = 0 또는 1 (행 마지막은 하나만)</code></pre>
+<p>정사각형 UV 이미지에 삼각형을 억지로 맞추는 대신 삼각 셀 주소를 직접 사용합니다. 화면 픽셀에서 계산된 방향은 면·타일·셀 순서로 주소가 결정됩니다.</p>
+<p class="source-note">원본: <a href="https://github.com/VARZero/bosio_OutputCore#정이십면체-배열">출력 코어 배열 정의</a>, <a href="https://github.com/VARZero/bosio_OutputCore/blob/main/software/bosio_geometry_v2.py">장면 패킹 코드</a>.</p>

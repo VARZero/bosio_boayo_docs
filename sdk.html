@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, BoayoSDK Python API 예제">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/sdk.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>앱 SDK · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="sdk">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+            <div class="nav-group">시작</div>
+          <a class="nav-item" href="./">전체 소개</a>
+          <a class="nav-item" href="quickstart.html">빠른 시작</a>
+          <a class="nav-item" href="architecture.html">시스템 구조</a>
+            <div class="nav-group">핵심 시스템</div>
+          <a class="nav-item" href="geometry.html">정이십면체 장면</a>
+          <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
+          <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
+            <div class="nav-group">앱과 UI</div>
+          <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
+          <a class="nav-item active" href="sdk.html" aria-current="page">앱 SDK</a>
+            <div class="nav-group">운영</div>
+          <a class="nav-item" href="deployment.html">배포와 부팅</a>
+          <a class="nav-item" href="quality.html">화질과 성능</a>
+          <a class="nav-item" href="reference.html">API와 소스</a>
+      </nav>
+      <div class="sidebar-footer">현재 구현 기준 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>앱과 UI</span><span aria-hidden="true">/</span><strong>앱 SDK</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">앱과 UI <span>·</span> 앱 SDK</div>
+        <h1>내 앱에 구면 창 붙이기</h1>
+        <p>BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.</p>
+      </div>
+      <article class="article"><p class="lead">여러 Python 앱이 동일한 BoAYo 창 규칙을 쓰려면 <code>boayo_sdk.py</code>를 가져옵니다. SDK가 Bosio IPC 접속, 창 등록, 아래 캡션, 이벤트 분배를 맡고 앱은 내용만 그립니다.</p>
+<h2>가장 작은 실행 앱</h2>
+<pre><code>import time
+from boayo_sdk import BoayoSDK, INK
+
+with BoayoSDK("hello") as sdk:
+    window = sdk.create_window("Hello", width_deg=38, height_deg=28)
+
+    def draw(canvas, content):
+        canvas.text("HELLO", content.x + 20, content.y + 20,
+                    INK, scale=3, bold=True)
+
+    window.present(draw)
+    while not window.closed:
+        for event in sdk.poll_events():
+            if (event.window_id == window.window_id
+                    and event.type == "pointer_button" and event.pressed):
+                print(f"click: ({event.x:.1f}, {event.y:.1f})", flush=True)
+        time.sleep(0.05)</code></pre>
+<p><code>create_window()</code>에 자세 좌표를 생략하면 런처가 실행 위치를 환경 변수 <code>BOAYO_APP_AZIMUTH</code>와 <code>BOAYO_APP_ELEVATION</code>으로 전달합니다. <code>content</code>는 캡션을 제외한 앱 내용 사각형이고 클릭 좌표 <code>event.x/y</code>도 그 사각형의 왼쪽 위 기준입니다. 캡션 클릭은 SDK가 자체 처리하므로 앱 내용 클릭 이벤트로 전달되지 않습니다.</p>
+<h2>이미지 전달</h2>
+<pre><code># image: NumPy 배열, shape=(높이, 너비, 3), RGB24
+window.present_rgb(image, fit="contain")
+# 필요하면 fit="stretch"</code></pre>
+<p>SDK가 내용을 그린 뒤 캡션을 덧그립니다. 앱은 이미 렌더링한 이미지를 그대로 전달할 수 있습니다. 보이는 픽셀의 최종 품질은 표면 크기, 창의 각도 크기, M 셀 분할도, Bosio 투영 AA에 함께 좌우됩니다. 작은 글씨에는 소스 이미지에서 충분한 획 굵기와 크게 그린 글자를 쓰는 편이 좋습니다.</p>
+<h2>한 앱에서 여러 창</h2>
+<pre><code>with BoayoSDK("multi-view") as sdk:
+    main = sdk.create_window("Main")
+    tools = sdk.create_window("Tools", azimuth=20, elevation=0,
+                              width_deg=30, height_deg=22)
+    main.present(draw_main)
+    tools.present(draw_tools)
+    while sdk.windows:
+        for event in sdk.poll_events():
+            if event.window_id == main.window_id:
+                handle_main(event)
+            elif event.window_id == tools.window_id:
+                handle_tools(event)
+        time.sleep(0.05)</code></pre>
+<p>이벤트는 앱의 SDK 연결에서 한 번만 읽고 창 ID별로 나눕니다. 앱이 정적 화면이라도 <code>sdk.poll_events()</code>를 계속 호출해야 닫기·이동·크기 조절에 반응합니다. 앱 목록 등록에는 <code>apps.json</code>의 실행 <code>command</code>가 필요합니다.</p>
+<div class="callout"><strong>가져올 파일</strong><p>보드에서 런처 외부 앱을 직접 실행할 때 <code>/home/xilinx/bosio_v2/boayo</code>와 <code>/home/xilinx/bosio_v2</code>를 <code>PYTHONPATH</code>에 넣습니다. SDK와 예제의 원본은 <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/docs/SDK_QUICKSTART.md">SDK 빠른 시작</a>, <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/boayo/boayo_pulse_app.py">Pulse 앱</a>, <a href="https://github.com/VARZero/bosio_BoAYO/blob/main/examples/boayo_sdk_multiwindow.py">두 창 예제</a>에 있습니다.</p></div>
+</article>
+      <div class="page-end">
+        <a href="deployment.html"><span>다음 문서</span><strong>배포와 부팅 →</strong></a>
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

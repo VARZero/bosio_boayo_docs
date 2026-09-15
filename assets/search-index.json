@@ -1,0 +1,86 @@
+[
+  {
+    "url": "./",
+    "label": "전체 소개",
+    "title": "BOSIO × BoAYo",
+    "summary": "정이십면체 프레임버퍼부터 구면 데스크톱까지, 실제 구현을 한곳에서 읽습니다.",
+    "keywords": "개요 구조 저장소"
+  },
+  {
+    "url": "quickstart.html",
+    "label": "빠른 시작",
+    "title": "PYNQ-Z2 실행",
+    "summary": "통합 저장소를 내려받고 보드에 올린 뒤 출력과 창을 확인합니다.",
+    "keywords": "설치 실행 SSH"
+  },
+  {
+    "url": "architecture.html",
+    "label": "시스템 구조",
+    "title": "세 계층의 연결",
+    "summary": "센서, FPGA 출력 코어, Bosio 창 관리자와 BoAYo 앱의 책임을 나눕니다.",
+    "keywords": "하드웨어 소프트웨어 데이터 흐름"
+  },
+  {
+    "url": "geometry.html",
+    "label": "정이십면체 장면",
+    "title": "20면 · 211타일 · M×M 셀",
+    "summary": "7·7·7·8 분할과 작은 삼각 셀의 주소 체계를 설명합니다.",
+    "keywords": "정이십면체 7-7-7-8 타일 M16"
+  },
+  {
+    "url": "output-core.html",
+    "label": "출력 코어 RTL",
+    "title": "투영과 HDMI 출력",
+    "summary": "FPGA가 실제로 수행하는 면 선택, 자세 계수, 캐시와 영상을 설명합니다.",
+    "keywords": "RTL Q24 HDMI 센서 AXI"
+  },
+  {
+    "url": "sensor-buttons.html",
+    "label": "센서와 버튼",
+    "title": "GY-521 · Pmod B · BTN",
+    "summary": "직접 AXI4-Stream 센서 경로와 PYNQ 버튼 입력을 설명합니다.",
+    "keywords": "MPU6050 I2C 버튼 시선"
+  },
+  {
+    "url": "window-manager.html",
+    "label": "Bosio 창 관리자",
+    "title": "구면 창과 부분 갱신",
+    "summary": "IPC, 포커스, C++/NEON 합성 및 BPT1 dirty tile 갱신을 다룹니다.",
+    "keywords": "IPC 합성 포커스 NEON BPT1"
+  },
+  {
+    "url": "boayo.html",
+    "label": "BoAYo 데스크톱",
+    "title": "패널과 앱 캡션",
+    "summary": "런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.",
+    "keywords": "런처 패널 캡션 BTN2 앱"
+  },
+  {
+    "url": "sdk.html",
+    "label": "앱 SDK",
+    "title": "내 앱에 구면 창 붙이기",
+    "summary": "BoayoSDK로 내용을 그리고 이벤트를 받는 실전 예제를 제공합니다.",
+    "keywords": "BoayoSDK Python API 예제"
+  },
+  {
+    "url": "deployment.html",
+    "label": "배포와 부팅",
+    "title": "FullStack 실행 절차",
+    "summary": "세 저장소와 통합 저장소, 자동 시작 서비스 및 업데이트 흐름입니다.",
+    "keywords": "FullStack GitHub 부팅 서비스 배포"
+  },
+  {
+    "url": "quality.html",
+    "label": "화질과 성능",
+    "title": "AA · 해상도 · 검증",
+    "summary": "M=16의 화질 한계, 두 단계 AA와 실제 확인 지표를 구분합니다.",
+    "keywords": "AA FPS 성능 투영 RGB332"
+  },
+  {
+    "url": "reference.html",
+    "label": "API와 소스",
+    "title": "계약과 원본 문서",
+    "summary": "각도 단위, 주요 인터페이스, 저장소별 개발 소스 링크를 모았습니다.",
+    "keywords": "API 레지스터 문서 소스"
+  }
+]

@@ -1,0 +1,15 @@
+<p class="lead">출력 코어는 HDMI 신호만 내보내는 장치가 아닙니다. FPGA가 화면 픽셀마다 시선 방향을 계산하고, 정이십면체의 면·타일·삼각 셀을 찾아 장면 색을 읽어 영상 스트림으로 만듭니다.</p>
+<h2>픽셀의 색이 결정되는 경로</h2>
+<div class="flow"><span>출력 픽셀</span><span>Q24 자세 투영</span><span>20면 중 한 면</span><span>7·7·7·8 타일</span><span>M×M 셀 색</span><span>RGB24 영상</span></div>
+<p>소프트웨어는 앱 창을 구면 장면 셀에 합성합니다. 출력 코어는 그 장면을 현재 자세에서 다시 조회합니다. 따라서 창의 그림은 ARM 소프트웨어가 만들지만, 정이십면체에서 현재 HDMI 픽셀로의 선택·출력은 RTL이 수행합니다. <a href="architecture.html">전체 데이터 흐름</a>에서 이 경계를 확인할 수 있습니다.</p>
+<h2>자세 입력과 Q24 계수</h2>
+<p>센서 허브에서 오는 96비트 AXI4-Stream 단어는 부호 있는 32비트 <strong>yaw, pitch, roll의 mrad 값</strong>을 차례로 담습니다. 이 값이 Q24 계수 자체는 아닙니다. FPGA의 자세 변환 로직이 센서 값으로 투영 계수를 계산하고 프레임 경계에서 교체합니다. 소프트웨어가 수동 자세를 설정할 때는 드라이버가 각도에서 Q24 계수를 만들어 씁니다.</p>
+<pre><code>packet[31:0]  = yaw_mrad
+packet[63:32] = pitch_mrad
+packet[95:64] = roll_mrad</code></pre>
+<p>센서 기반 모드의 기본 시야각은 가로 60°, 세로 45°입니다. 1280×720 출력에 맞춰진 RTL과 bitstream의 자세한 설정은 <a href="https://github.com/VARZero/bosio_OutputCore">OutputCore 원본 저장소</a>에서 확인하세요.</p>
+<h2>장면 저장과 부분 갱신</h2>
+<p>20면의 타일 디렉터리와 셀 색은 RGB332 팔레트로 관리합니다. 창 내용의 작은 부분이 바뀌면 창 관리자가 바뀐 삼각 셀을 다시 합성하고 BPT1 패치로 전달합니다. 출력 코어는 필요한 타일·셀만 갱신할 수 있으며, 전체 장면을 매번 새로 보낼 필요가 없습니다. 창 외곽의 부분 커버리지처럼 아래 장면을 다시 고려해야 하는 경우에는 안전하게 전체 스냅샷으로 전환합니다.</p>
+<h2>출력과 설정</h2>
+<p>코어는 RGB24 AXI4-Stream 비디오를 내보내며 HDMI 타이밍에는 외부 비디오 출력 경로를 사용합니다. 하드웨어 경계 AA는 AXI-Lite <code>0x1c</code>의 활성화·임계값·강도 필드로 설정합니다. 자세 방향 반전은 <code>0x20</code>의 yaw·pitch·roll 비트로 지정합니다. 기본 AA 임계값 24, 강도 32는 약한 경계 혼합입니다.</p>
+<div class="callout"><strong>원본 코드와 드라이버</strong><p><a href="https://github.com/VARZero/bosio_OutputCore">bosio_OutputCore</a>에 RTL, 시뮬레이션·빌드 자료, PYNQ 드라이버와 레지스터 문서가 있습니다. 배포용 통합 bitstream과 센서 허브 연결은 <a href="https://github.com/VARZero/bosio_SphericalWM">bosio_SphericalWM</a>과 <a href="https://github.com/VARZero/bosio_FullStack">FullStack</a>을 참조하세요.</p></div>
