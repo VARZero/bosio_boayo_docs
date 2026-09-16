@@ -43,6 +43,7 @@
           <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
           <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
           <a class="nav-item active" href="window-manager.html" aria-current="page">Bosio 창 관리자</a>
+          <a class="nav-item" href="external-input.html">외부 포인터 입력</a>
             <div class="nav-group">앱과 UI</div>
           <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
           <a class="nav-item" href="sdk.html">앱 SDK</a>
@@ -70,12 +71,13 @@
 <p>C++ 합성기는 ARM의 NEON 명령을 사용합니다. 창 내용의 일부가 바뀌면 안티에일리어싱에 쓰이는 픽셀 범위와 겹치는 삼각 셀만 다시 합성해 BPT1 데이터로 보냅니다. 창 위치·크기·겹침이 바뀌거나 아래 창의 색을 다시 계산해야 할 때는 전체 장면을 보냅니다. 정이십면체 프레임버퍼는 Bosio 창 관리자가 관리하므로 앱 하나가 화면 전체를 차지하지 않습니다.</p>
 <h2>입력과 포커스</h2>
 <p>마우스 클릭과 BTN2 시선 클릭은 같은 창 입력 경로로 처리됩니다. 클릭한 위치에서 가장 위에 있는 창에 포커스를 주고 해당 앱으로 이벤트를 보냅니다. BoAYo 런처 패널은 앱 창 위에 표시되지만, 패널 바깥을 클릭하면 패널만 닫힙니다. 그 위치에 앱 창이 있다면 클릭도 그 앱에 전달되고 기존 창은 계속 남습니다.</p>
+<p>관성 추적기나 카메라 손동작 인식기는 외부 입력 API를 통해 같은 포인터 경로에 구면 이동·클릭·드래그를 보낼 수 있습니다. 자세한 연결 방법은 <a href="external-input.html">외부 포인터 입력</a>에서 설명합니다.</p>
 <h2>장면 갱신 속도와 영상 속도</h2>
 <p>출력 코어는 저장된 장면을 읽어 HDMI 영상을 계속 만듭니다. 창 내용의 변경은 Bosio가 필요한 셀을 합성하고 출력 코어에 보낸 뒤 화면에 나타납니다. HDMI 출력 프레임률과 창 내용 갱신 속도의 차이는 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p>
 <div class="callout"><strong>개발 소스</strong><p><a href="https://github.com/VARZero/bosio_SphericalWM">bosio_SphericalWM</a>에 WM 데몬, IPC 클라이언트, 네이티브 합성기, 부분 갱신, 보드 서비스와 센서 허브 RTL이 함께 있습니다.</p></div>
 </article>
       <div class="page-end">
-        <a href="boayo.html"><span>다음 문서</span><strong>BoAYo 데스크톱 →</strong></a>
+        <a href="external-input.html"><span>다음 문서</span><strong>외부 포인터 입력 →</strong></a>
       </div>
       <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
     </main>

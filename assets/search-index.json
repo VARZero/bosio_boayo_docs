@@ -49,6 +49,13 @@
     "keywords": "IPC 합성 포커스 NEON BPT1"
   },
   {
+    "url": "external-input.html",
+    "label": "외부 포인터 입력",
+    "title": "추적기와 제스처 연결",
+    "summary": "관성 추적기·카메라 손동작 인식기 같은 별도 입력 프로세스를 구면 포인터에 연결합니다.",
+    "keywords": "입력 API 포인터 클릭 드래그 제스처 카메라 IMU"
+  },
+  {
     "url": "boayo.html",
     "label": "BoAYo 데스크톱",
     "title": "패널과 앱 캡션",

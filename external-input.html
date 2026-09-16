@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="관성 추적기·카메라 손동작 인식기 같은 별도 입력 프로세스를 구면 포인터에 연결합니다.">
+  <meta name="keywords" content="BOSIO, BoAYo, PYNQ-Z2, 입력 API 포인터 클릭 드래그 제스처 카메라 IMU">
+  <meta name="theme-color" content="#112b3a">
+  <link rel="canonical" href="https://varzero.github.io/bosio_boayo_docs/external-input.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <title>외부 포인터 입력 · BOSIO × BoAYo 문서</title>
+</head>
+<body data-page="external-input">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <a class="brand" href="./" aria-label="BOSIO × BoAYo 문서 홈">
+      <span class="brand-mark" aria-hidden="true">◬</span><span>BOSIO <span class="brand-cross">×</span> BoAYo</span>
+    </a>
+    <span class="topbar-label">개발 문서</span>
+    <a class="repo-link" href="https://github.com/VARZero/bosio_FullStack" target="_blank" rel="noopener noreferrer">전체 소스 ↗</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="문서 탐색">
+      <div class="sidebar-head">
+        <span class="sidebar-eyebrow">DOCUMENTATION</span>
+        <strong>정이십면체에서<br>구면 데스크톱까지</strong>
+      </div>
+      <div class="search-wrap">
+        <label class="visually-hidden" for="site-search">문서 검색</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="site-search" type="search" placeholder="문서 검색" autocomplete="off" aria-controls="search-results">
+        <div id="search-results" class="search-results" role="status" hidden></div>
+      </div>
+      <nav class="sidebar-nav">
+            <div class="nav-group">시작</div>
+          <a class="nav-item" href="./">전체 소개</a>
+          <a class="nav-item" href="quickstart.html">빠른 시작</a>
+          <a class="nav-item" href="architecture.html">시스템 구조</a>
+            <div class="nav-group">핵심 시스템</div>
+          <a class="nav-item" href="geometry.html">정이십면체 장면</a>
+          <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
+          <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
+          <a class="nav-item active" href="external-input.html" aria-current="page">외부 포인터 입력</a>
+            <div class="nav-group">앱과 UI</div>
+          <a class="nav-item" href="boayo.html">BoAYo 데스크톱</a>
+          <a class="nav-item" href="sdk.html">앱 SDK</a>
+          <a class="nav-item" href="sdk-reference.html">SDK 함수·이벤트</a>
+            <div class="nav-group">운영</div>
+          <a class="nav-item" href="deployment.html">배포와 부팅</a>
+          <a class="nav-item" href="quality.html">화질과 성능</a>
+            <div class="nav-group">참고</div>
+          <a class="nav-item" href="reference.html">데이터와 소스</a>
+      </nav>
+      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
+    </aside>
+    <main id="main" class="main">
+      <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>핵심 시스템</span><span aria-hidden="true">/</span><strong>외부 포인터 입력</strong></div>
+      <div class="page-hero">
+        <div class="eyebrow">핵심 시스템 <span>·</span> 외부 포인터 입력</div>
+        <h1>추적기와 제스처 연결</h1>
+        <p>관성 추적기·카메라 손동작 인식기 같은 별도 입력 프로세스를 구면 포인터에 연결합니다.</p>
+      </div>
+      <article class="article"><p class="lead">BOSIO의 포인터는 USB 마우스나 PYNQ 버튼에만 묶여 있지 않습니다. 관성 추적기, 카메라 손동작 인식기, 시선 추적기 같은 별도 프로세스도 공개 입력 API로 같은 구면 포인터를 움직이고 클릭할 수 있습니다.</p>
+
+<h2>연결 구조</h2>
+<div class="flow"><span>외부 센서·카메라</span><span>입력 인식 데몬</span><span><code>bosio_input_client.py</code></span><span>Bosio IPC</span><span>포커스·클릭·드래그</span></div>
+<p>입력 데몬은 영상을 그리거나 창을 소유하지 않습니다. 장치별 측정값을 구면의 방위각·고도각으로 바꾼 뒤 <code>/tmp/bosio-wm.sock</code>에 전달합니다. Bosio 창 관리자가 그 위치의 최상위 창을 찾고 기존 마우스·BTN2와 같은 규칙으로 이벤트를 보냅니다.</p>
+
+<h2>빠른 예제</h2>
+<pre><code>from bosio_input_client import BosioInputClient
+
+with BosioInputClient("camera-gesture") as pointer:
+    pointer.move_absolute(azimuth=25.0, elevation=-18.0)
+    pointer.click()</code></pre>
+<p>드래그는 버튼을 누른 뒤 포인터를 계속 옮기고 마지막에 놓습니다.</p>
+<pre><code>pointer.button(True)
+pointer.move_relative(delta_azimuth=4.0, delta_elevation=0.0)
+pointer.button(False)</code></pre>
+
+<h2>입력 API</h2>
+<div class="table-scroll"><table><thead><tr><th>함수</th><th>기능</th></tr></thead><tbody>
+<tr><td><code>move_absolute(azimuth, elevation)</code></td><td>포인터를 도 단위의 절대 구면 위치로 옮깁니다.</td></tr>
+<tr><td><code>move_relative(delta_azimuth, delta_elevation)</code></td><td>현재 위치에서 각도만큼 상대 이동합니다.</td></tr>
+<tr><td><code>button(pressed, button="left")</code></td><td>누름·놓기를 전달합니다. 누른 상태로 이동하면 드래그가 됩니다.</td></tr>
+<tr><td><code>click(button="left")</code></td><td>한 번의 누름과 놓기를 한 요청으로 전달합니다.</td></tr>
+<tr><td><code>scroll(delta)</code></td><td>스크롤 변화량을 전달합니다.</td></tr>
+<tr><td><code>state()</code></td><td>포인터 위치, 맞닿은 창, 현재 버튼 상태를 읽습니다.</td></tr>
+</tbody></table></div>
+
+<h2>좌표와 보정</h2>
+<p>API 좌표는 도 단위입니다. 방위각은 <code>-180°..+180°</code>에서 이어지고 고도각은 <code>-89.5°..+89.5°</code>로 제한됩니다. 카메라 픽셀이나 정규화 좌표를 그대로 보내지 않고, 입력 데몬에서 카메라 시야각·센서 장착 방향·중립점을 적용해 방위각과 고도각으로 바꿉니다.</p>
+<div class="callout"><strong>장치 보정은 입력 데몬이 담당합니다</strong><p>그래야 Bosio는 장치 종류를 몰라도 되고, 서로 다른 센서가 같은 입력 API를 사용할 수 있습니다.</p></div>
+
+<h2>여러 입력원과 비정상 종료</h2>
+<p>각 연결은 독립된 입력원으로 구분됩니다. 여러 입력원이 같은 버튼을 눌렀다면 마지막 입력원이 놓을 때 버튼이 해제됩니다. 입력 프로세스가 버튼을 누른 채 종료되거나 소켓 연결이 끊기면 Bosio가 그 입력원에 속한 버튼을 자동으로 놓아 드래그가 계속 남지 않게 합니다.</p>
+
+<h2>직접 실행해 보기</h2>
+<pre><code>python3 bosio_input_demo.py --azimuth 0 --elevation -59
+python3 bosio_input_demo.py --azimuth 0 --elevation -59 --drag-degrees 12</code></pre>
+<p>Python 이외의 언어에서는 한 줄 JSON IPC의 <code>input_warp</code>, <code>input_move</code>, <code>input_button</code>, <code>input_click</code>, <code>input_scroll</code>, <code>input_status</code> 호출을 사용할 수 있습니다.</p>
+
+<div class="callout"><strong>원본 문서와 코드</strong><p><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_EXTERNAL_INPUT.md">외부 포인터 입력 API 문서</a>와 <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/sw/bosio_input_client.py">Python 입력 클라이언트</a>에서 전체 내용을 볼 수 있습니다.</p></div>
+</article>
+      <div class="page-end">
+        <a href="boayo.html"><span>다음 문서</span><strong>BoAYo 데스크톱 →</strong></a>
+      </div>
+      <footer class="footer">BOSIO × BoAYo · <a href="https://github.com/VARZero/bosio_boayo_docs">문서 저장소</a> · 구현 원본은 각 소스 저장소에서 확인하세요.</footer>
+    </main>
+    <aside class="toc" aria-label="이 페이지에서"><div class="toc-title">이 페이지에서</div><nav id="toc-links"></nav></aside>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

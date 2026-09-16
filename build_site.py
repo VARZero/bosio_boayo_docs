@@ -20,6 +20,7 @@ PAGES = [
     ("output-core", "핵심 시스템", "출력 코어 RTL", "투영과 HDMI 출력", "FPGA가 실제로 수행하는 면 선택, 자세 계수, 캐시와 영상을 설명합니다.", "RTL Q24 HDMI 센서 AXI"),
     ("sensor-buttons", "핵심 시스템", "센서와 버튼", "GY-521 · Pmod B · BTN", "직접 AXI4-Stream 센서 경로와 PYNQ 버튼 입력을 설명합니다.", "MPU6050 I2C 버튼 시선"),
     ("window-manager", "핵심 시스템", "Bosio 창 관리자", "구면 창과 부분 갱신", "창 입력과 포커스, C++/NEON 합성, 바뀐 타일만 보내는 BPT1 갱신을 설명합니다.", "IPC 합성 포커스 NEON BPT1"),
+    ("external-input", "핵심 시스템", "외부 포인터 입력", "추적기와 제스처 연결", "관성 추적기·카메라 손동작 인식기 같은 별도 입력 프로세스를 구면 포인터에 연결합니다.", "입력 API 포인터 클릭 드래그 제스처 카메라 IMU"),
     ("boayo", "앱과 UI", "BoAYo 데스크톱", "패널과 앱 캡션", "런처 패널, 독립 앱 창, 클릭·드래그·닫기 규칙을 정리합니다.", "런처 패널 캡션 BTN2 앱"),
     ("sdk", "앱과 UI", "앱 SDK", "내 앱에 구면 창 붙이기", "BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.", "BoayoSDK Python API 예제"),
     ("sdk-reference", "앱과 UI", "SDK 함수·이벤트", "함수와 이벤트 안내", "창 만들기와 닫기, 공개 함수, 상태값과 이벤트의 사용법을 찾아봅니다.", "SDK API 함수 이벤트 BoayoEvent BoayoWindowState Surface"),
