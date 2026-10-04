@@ -74,8 +74,13 @@ packet[63:32] = pitch_mrad
 packet[95:64] = roll_mrad</code></pre>
 <p>센서 자세를 사용하는 모드의 기본 시야각은 가로 60°, 세로 45°입니다. 1280×720 출력 설정과 비트스트림의 상세 내용은 <a href="https://github.com/VARZero/bosio_OutputCore">출력 코어 원본 코드</a>에서 확인하세요.</p>
 <h2>장면 저장과 부분 갱신</h2>
-<p>20면의 타일 위치 정보와 셀 색은 RGB332 색상표를 사용합니다. 창 내용의 일부가 바뀌면 Bosio 창 관리자가 관련 셀을 다시 합성해 BPT1 형식으로 보냅니다. 출력 코어는 해당 타일과 셀만 갱신할 수 있습니다. 창 가장자리처럼 아래 창의 색을 함께 계산해야 하는 변경은 전체 장면을 다시 전송합니다.</p>
+<p>20면의 타일 위치 정보와 셀 색은 RGB332 색상표를 사용합니다. 현재 BS25 코어는 셀 데이터를 DDR에 두고, 필요한 캐시 라인을 읽습니다. 팔레트와 타일 디렉터리는 BRAM에 둡니다. 창 내용의 일부가 바뀌면 Bosio 창 관리자가 BPT1 데이터를 만들고, 드라이버가 비활성 DDR 장면의 변경 타일만 수정합니다. 코어는 다음 프레임 경계에서 새 장면 주소로 전환합니다. 창 가장자리처럼 아래 창의 색을 함께 계산해야 하는 변경은 전체 장면을 다시 전송합니다.</p>
+<h2>캐시 파라미터</h2>
+<div class="table-scroll"><table><thead><tr><th>파라미터</th><th>기본값</th><th>역할</th></tr></thead><tbody><tr><td><code>CACHE_LINE_BYTES</code></td><td>64</td><td>DDR에서 한 번에 읽는 라인 크기</td></tr><tr><td><code>CACHE_BYTES</code></td><td>16384</td><td>셀 데이터 캐시 용량: 16KiB</td></tr><tr><td><code>CACHE_WAYS</code></td><td>2</td><td>세트마다 저장할 수 있는 라인 수</td></tr></tbody></table></div>
+<p>이 값은 FPGA 합성 시 결정됩니다. 변경하면 비트스트림을 다시 빌드해야 합니다. 기본 M=16 타일의 256바이트 데이터는 네 라인으로 나뉩니다. 현재 BOSIO 연결은 AXI 32비트, 필요한 주소를 요청할 때 읽는 demand 방식이며, 타일 전체 선취는 아직 연결하지 않았습니다. DDR 저장으로 장면 용량의 BRAM 제약을 줄이지만, M=32의 합성 속도나 DDR 대역폭 문제까지 해결하는 것은 아닙니다.</p>
+<p>드라이버 <code>status()</code>로 라인 크기·용량·way 수와 hit·miss·대기 클럭을 확인합니다. 새 식별값은 <code>0x42533235</code>입니다. <a href="https://github.com/VARZero/bosio_OutputCore/blob/main/docs/CACHE_LINE.md">BS25 캐시·레지스터 문서</a>와 <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_DDR_CACHE.md">DDR 버퍼와 드라이버 사용법</a>에 상세 내용을 정리했습니다.</p>
 <h2>출력과 설정</h2>
+<p>PYNQ-Z2 참조 빌드의 BRAM 사용량은 BS24의 137.5/140개에서 BS25의 21.5/140개로 줄었습니다. 100MHz 타이밍을 통과했으며, M=16 전체 구면 4,220타일 장면을 올린 보드 테스트에서 출력 스트림 약 59.9FPS를 확인했습니다. 이는 ARM이 창 내용을 새로 합성하는 속도와 다른 수치입니다. M=32는 전체 구면 패킹을 확인한 단계이고 실시간 출력 성능은 아직 측정하지 않았습니다.</p>
 <p>코어는 RGB24 AXI4-Stream 영상을 내보내고, HDMI 출력 타이밍은 연결된 비디오 출력 경로가 맡습니다. 출력 단계의 안티에일리어싱(AA)은 AXI-Lite <code>0x1c</code>에서 켜고 임계값·강도를 설정합니다. 자세 방향은 <code>0x20</code>의 yaw·pitch·roll 비트로 각각 반전할 수 있습니다. 기본 AA 임계값은 24, 강도는 32입니다.</p>
 <div class="callout"><strong>원본 코드와 드라이버</strong><p><a href="https://github.com/VARZero/bosio_OutputCore">bosio_OutputCore</a>에는 RTL, 시뮬레이션·빌드 자료, PYNQ 드라이버와 레지스터 문서가 있습니다. 통합 비트스트림과 센서 허브 연결은 <a href="https://github.com/VARZero/bosio_SphericalWM">bosio_SphericalWM</a>과 <a href="https://github.com/VARZero/bosio_FullStack">FullStack</a>에서 확인하세요.</p></div>
 </article>

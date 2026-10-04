@@ -14,7 +14,7 @@
 <tr><td>앱 이미지</td><td>높이 × 너비 × 3의 NumPy RGB24 배열</td><td>앱 → BoAYo SDK → Bosio 창 관리자</td></tr>
 <tr><td>창 위치와 크기</td><td>구면 중심 위치와 가로·세로 각도, 포커스와 창 겹침 순서</td><td>Bosio 창 관리자에서 처리</td></tr>
 <tr><td>정이십면체 장면</td><td>20면 × 면당 211타일 × 타일당 M² 삼각 셀, RGB332 색상표</td><td>Bosio 합성기 → 출력 코어</td></tr>
-<tr><td>장면의 일부 갱신</td><td>바뀐 타일만 담은 BPT1 데이터. 필요한 경우 전체 장면을 다시 전송</td><td>Bosio 합성기 → 출력 코어</td></tr>
+<tr><td>장면의 일부 갱신</td><td>바뀐 타일만 담은 BPT1 데이터. BS25 드라이버가 비활성 DDR 버퍼에 적용한 뒤 코어가 프레임 경계에서 주소를 전환. 필요한 경우 전체 장면을 다시 전송</td><td>Bosio 합성기 → 드라이버 → 출력 코어</td></tr>
 <tr><td>창 제어 메시지</td><td>JSON 메시지, Unix 도메인 소켓 <code>/tmp/bosio-wm.sock</code></td><td>앱·BoAYo SDK ↔ Bosio 창 관리자</td></tr>
 </tbody></table>
 <h2>더 자세히 읽을 문서</h2>
