@@ -1,17 +1,17 @@
-<p class="lead">정이십면체의 각 면은 작은 삼각형으로 나뉩니다. <strong>그 작은 삼각형 하나가 타일</strong>입니다. 현재 설정은 타일 한 변을 다시 16개로 나누고, 그 안의 더 작은 삼각 셀마다 색을 저장합니다.</p>
-<div class="metric-strip"><div class="metric"><strong>20</strong><span>면</span></div><div class="metric"><strong>4,220</strong><span>전체 타일: 20×211</span></div><div class="metric"><strong>1,080,320</strong><span>M=16일 때 전체 셀 수</span></div></div>
+<p class="lead">정이십면체의 각 면은 작은 삼각형으로 나뉩니다. <strong>그 작은 삼각형 하나가 타일</strong>입니다. 현재 설정은 타일 한 변을 다시 32개로 나누고, 그 안의 더 작은 삼각 셀마다 색을 저장합니다.</p>
+<div class="metric-strip"><div class="metric"><strong>20</strong><span>면</span></div><div class="metric"><strong>4,220</strong><span>전체 타일: 20×211</span></div><div class="metric"><strong>4,321,280</strong><span>M=32일 때 전체 셀 수</span></div></div>
 <h2>면 안의 7·7·7·8 분할</h2>
 <p>한 면은 타일 한 변에 각각 7개, 7개, 7개, 8개가 놓이는 네 영역으로 나뉩니다. 각 영역의 타일 수는 49개, 49개, 49개, 64개이고, 합하면 면당 211개입니다.</p>
 <pre><code>면당 타일 = 7² + 7² + 7² + 8² = 211
 전체 타일 = 20 × 211 = 4,220
 타일당 작은 삼각 셀 = M²
-M=16 → 타일당 256셀, 전체 1,080,320셀</code></pre>
+M=32 → 타일당 1,024셀, 전체 4,321,280셀</code></pre>
 <div class="callout"><strong>타일과 셀은 다릅니다</strong><p>7·7·7·8 분할에서 생기는 삼각형이 <em>타일</em>입니다. 각 타일을 다시 M개씩 나눠 생기는 작은 삼각형이 색을 저장하는 <em>셀</em>입니다. M을 두 배로 늘리면 타일당 셀 수는 네 배가 됩니다.</p></div>
 <h2>현재 해상도와 확장</h2>
-<div class="table-scroll"><table><thead><tr><th>M</th><th>타일당 셀</th><th>전체 셀</th><th>설명</th></tr></thead><tbody><tr><td>8</td><td>64</td><td>270,080</td><td>분할 수가 적은 설정</td></tr><tr><td>16</td><td>256</td><td>1,080,320</td><td>현재 통합 실행의 기본값</td></tr><tr><td>32</td><td>1,024</td><td>4,321,280</td><td>셀 수가 많아 자원과 합성 속도를 다시 확인해야 함</td></tr></tbody></table></div>
-<p>출력 코어는 M=8·16·32를 지원하지만 현재 통합 실행은 M=16입니다. M=32로 올리면 표현할 수 있는 위치가 촘촘해지는 대신, 소프트웨어가 채우고 전송해야 할 셀 수도 네 배가 됩니다. 앱 글꼴을 그대로 둔 채 M만 올려서는 글씨가 자동으로 선명해지지 않습니다.</p>
+<div class="table-scroll"><table><thead><tr><th>M</th><th>타일당 셀</th><th>전체 셀</th><th>설명</th></tr></thead><tbody><tr><td>8</td><td>64</td><td>270,080</td><td>분할 수가 적은 설정</td></tr><tr><td>16</td><td>256</td><td>1,080,320</td><td>기존 M=16 배포 경로</td></tr><tr><td>32</td><td>1,024</td><td>4,321,280</td><td>현재 검증된 두 투영코어 구성</td></tr></tbody></table></div>
+<p>출력 코어는 M=8·16·32를 지원하며 현재 검증 경로는 M=32입니다. 전체 셀 수는 M=16의 네 배지만 정상 갱신에서는 변경된 타일만 투영·합성·전달합니다. 앱 글꼴을 그대로 둔 채 M만 올려서는 글씨가 자동으로 선명해지지 않습니다.</p>
 <h2>타일 내부 셀 인덱스</h2>
-<p>BS25는 셀 데이터를 DDR에 두므로 M=32의 전체 4,220타일 장면을 패킹할 수 있습니다. 이 장면은 팔레트·디렉터리와 정렬을 포함해 1,084,800워드입니다. 현재 통합 기본값과 실제 출력 측정은 M=16이며, M=32 실시간 성능은 아직 확인하지 않았습니다. 자세한 캐시 구성은 <a href="output-core.html">출력 코어 RTL</a>에서 설명합니다.</p>
+<p>BS25는 셀 데이터를 DDR에 두므로 M=32의 전체 4,220타일 장면을 패킹할 수 있습니다. 이 장면은 팔레트·디렉터리와 정렬을 포함해 1,084,800워드입니다. 현재 M=32 경로는 보드에서 증분 갱신과 HDMI 출력을 검증했습니다. 장면 버퍼 하나는 4,339,200 bytes이며 HDMI 화면 버퍼와는 별개입니다. 자세한 캐시 구성은 <a href="output-core.html">출력 코어 RTL</a>에서 설명합니다.</p>
 <p>타일 안의 셀 주소는 행 순서로 정합니다. 각 행에서 서로 반대 방향을 향한 삼각형이 번갈아 나타나며, 행 끝에는 한 방향의 삼각형만 남습니다.</p>
 <pre><code>cell_index = row² + 2 × column + orientation
 row = 0 … M-1

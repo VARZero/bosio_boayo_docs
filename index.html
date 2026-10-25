@@ -41,6 +41,7 @@
             <div class="nav-group">핵심 시스템</div>
           <a class="nav-item" href="geometry.html">정이십면체 장면</a>
           <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="display-transform.html">화면 회전·반전</a>
           <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
           <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
           <a class="nav-item" href="external-input.html">외부 포인터 입력</a>
@@ -54,7 +55,7 @@
             <div class="nav-group">참고</div>
           <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">검증 구성 · M=32 · 투영코어 ×2 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>시작</span><span aria-hidden="true">/</span><strong>전체 소개</strong></div>
@@ -64,15 +65,20 @@
         <p>정이십면체 프레임버퍼부터 구면 데스크톱까지, 실제 구현을 한곳에서 읽습니다.</p>
       </div>
       <article class="article"><p class="lead">BOSIO 출력 코어는 정이십면체 프레임버퍼를 읽어 HDMI 영상을 만듭니다. Bosio 창 관리자는 여러 앱 창을 그 프레임버퍼에 합성하고, BoAYo는 런처 패널·앱 창 캡션·SDK를 제공합니다. 이 문서는 <strong>PYNQ-Z2에 배포된 구성</strong>을 기준으로 작성했습니다.</p>
-<div class="metric-strip"><div class="metric"><strong>20</strong><span>정이십면체 면</span></div><div class="metric"><strong>211</strong><span>면당 삼각 타일</span></div><div class="metric"><strong>M=16</strong><span>현재 타일 변 분할도</span></div></div>
+<div class="metric-strip"><div class="metric"><strong>20</strong><span>정이십면체 면</span></div><div class="metric"><strong>211</strong><span>면당 삼각 타일</span></div><div class="metric"><strong>M=32</strong><span>현재 타일 변 분할도</span></div></div>
 <h2>어떤 시스템인가</h2>
 <div class="pipeline"><div><span>01 · FPGA</span>출력 코어<br>정이십면체 투영과 HDMI</div><div><span>02 · 창 관리</span>Bosio 창 관리자<br>구면 창 배치·합성·IPC</div><div><span>03 · 데스크톱</span>BoAYo<br>런처 패널·캡션·앱 SDK</div></div>
 <p>FPGA 센서 허브는 GY-521에서 자세를 읽고 yaw·pitch·roll 데이터를 출력 코어에 직접 보냅니다. 앱은 SDK로 창 이미지를 보내고, Bosio 창 관리자는 여러 이미지를 정이십면체 프레임버퍼에 합성합니다. 출력 코어는 현재 자세에서 각 화면 픽셀이 읽을 삼각 셀을 선택합니다.</p>
 <h2>문서에서 바로 찾기</h2>
-<div class="cards"><a class="card" href="quickstart.html"><span class="card-kicker">시작</span><strong>보드에서 실행하기</strong><small>FullStack 내려받기, 배포, 서비스와 화면 확인</small></a><a class="card" href="architecture.html"><span class="card-kicker">구조</span><strong>하드웨어와 소프트웨어</strong><small>창 이미지를 만드는 곳과 HDMI 화면을 만드는 곳</small></a><a class="card" href="geometry.html"><span class="card-kicker">프레임버퍼</span><strong>7·7·7·8 삼각 타일</strong><small>면당 211개 타일과 M=16 셀 주소</small></a><a class="card" href="sdk.html"><span class="card-kicker">앱 개발</span><strong>BoAYo SDK 빠른 시작</strong><small>앱에서 창을 만들고 내용을 갱신하는 방법</small></a></div>
+<div class="cards"><a class="card" href="quickstart.html"><span class="card-kicker">시작</span><strong>보드에서 실행하기</strong><small>FullStack 내려받기, 배포, 서비스와 화면 확인</small></a><a class="card" href="architecture.html"><span class="card-kicker">구조</span><strong>하드웨어와 소프트웨어</strong><small>창 이미지를 만드는 곳과 HDMI 화면을 만드는 곳</small></a><a class="card" href="geometry.html"><span class="card-kicker">프레임버퍼</span><strong>7·7·7·8 삼각 타일</strong><small>면당 211개 타일과 M=32 셀 주소</small></a><a class="card" href="sdk.html"><span class="card-kicker">앱 개발</span><strong>BoAYo SDK 빠른 시작</strong><small>앱에서 창을 만들고 내용을 갱신하는 방법</small></a></div>
 <h2>개별 저장소와 통합 저장소</h2>
-<div class="table-scroll"><table><thead><tr><th>저장소</th><th>주요 코드와 도구</th><th>링크</th></tr></thead><tbody><tr><td>bosio_OutputCore</td><td>정이십면체 출력 코어 RTL과 PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">저장소 열기 ↗</a></td></tr><tr><td>bosio_SphericalWM</td><td>센서 허브 RTL, 창 관리자, C++/NEON 합성기, 비트스트림</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">저장소 열기 ↗</a></td></tr><tr><td>bosio_BoAYO</td><td>런처 패널, 앱 SDK, 캡션, 예제 앱</td><td><a href="https://github.com/VARZero/bosio_BoAYO">저장소 열기 ↗</a></td></tr><tr><td>bosio_FullStack</td><td>세 저장소의 버전 고정과 통합 배포</td><td><a href="https://github.com/VARZero/bosio_FullStack">저장소 열기 ↗</a></td></tr></tbody></table></div>
-<div class="callout"><strong>현재 보드 설정</strong><p>삼각 타일 한 변의 셀 분할 수는 M=16입니다. BS25는 셀 데이터를 DDR에 저장하고 64바이트 라인·16KiB·2-way 캐시로 읽습니다. <a href="output-core.html">출력 코어 RTL</a>에 설정과 검증 범위를 정리했습니다. 출력 스트림 FPS와 창 내용이 새로 반영되는 속도는 다릅니다. 작은 글자와 가는 선의 화질은 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p></div>
+<div class="table-scroll"><table><thead><tr><th>저장소</th><th>주요 코드와 도구</th><th>링크</th></tr></thead><tbody><tr><td>bosio_OutputCore</td><td>정이십면체 출력 코어 RTL과 PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">저장소 열기 ↗</a></td></tr><tr><td>bosio_SphericalWM</td><td>센서 허브 RTL, 창 관리자, C++/NEON 합성기, 비트스트림</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">저장소 열기 ↗</a></td></tr><tr><td>bosio_BoAYO</td><td>런처 패널, 앱 SDK, 캡션, 예제 앱</td><td><a href="https://github.com/VARZero/bosio_BoAYO">저장소 열기 ↗</a></td></tr><tr><td>bosio_FullStack</td><td>구성 요소 버전 고정과 통합 배포</td><td><a href="https://github.com/VARZero/bosio_FullStack">저장소 열기 ↗</a></td></tr></tbody></table></div>
+<div class="callout"><strong>현재 보드 설정</strong><p>삼각 타일 한 변의 셀 분할 수는 M=32입니다. BS25는 셀 데이터를 DDR에 저장하고 64바이트 라인·16KiB·2-way 캐시로 읽습니다. <a href="output-core.html">출력 코어 RTL</a>에 설정과 검증 범위를 정리했습니다. 출력 스트림 FPS와 창 내용이 새로 반영되는 속도는 다릅니다. 작은 글자와 가는 선의 화질은 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p></div>
+
+<h2>현재 검증 구성 · 2026-10-18 릴리스</h2>
+<p>투영코어 2개가 변경 타일만 처리하고, 그대로인 창은 캐시를 재사용합니다. HDMI는 VDMA 화면 3장으로 픽셀 생성과 분리해 720p60을 유지합니다. 화면 전체 회전·반전은 Output Core의 DTF1에서 처리합니다. 문서 반영일은 2026-10-26이며 그날 보드를 새로 측정했다는 뜻은 아닙니다.</p>
+<div class="cards"><a class="card" href="display-transform.html"><strong>화면 회전·반전</strong><small>90도 단위 회전, 좌우·상하 반전, IMU와 입력 보정</small></a><a class="card" href="quality.html"><strong>최신 검증과 리소스</strong><small>HDMI 캡처, 증분 검사, LUT·BRAM·DSP</small></a></div>
+<p><a href="https://github.com/VARZero/bosio_ProjectionCore">독립 ProjectionCore 저장소</a>는 SphericalWM의 submodule로 고정됩니다. 기존 M=16 배포 스크립트와 현재 M=32 실행 절차는 <a href="quickstart.html">빠른 시작</a>에서 구분합니다.</p>
 </article>
       <div class="page-end">
         <a href="quickstart.html"><span>다음 문서</span><strong>빠른 시작 →</strong></a>

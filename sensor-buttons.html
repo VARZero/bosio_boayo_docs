@@ -41,6 +41,7 @@
             <div class="nav-group">핵심 시스템</div>
           <a class="nav-item" href="geometry.html">정이십면체 장면</a>
           <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="display-transform.html">화면 회전·반전</a>
           <a class="nav-item active" href="sensor-buttons.html" aria-current="page">센서와 버튼</a>
           <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
           <a class="nav-item" href="external-input.html">외부 포인터 입력</a>
@@ -54,7 +55,7 @@
             <div class="nav-group">참고</div>
           <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">검증 구성 · M=32 · 투영코어 ×2 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>핵심 시스템</span><span aria-hidden="true">/</span><strong>센서와 버튼</strong></div>
@@ -72,7 +73,7 @@
 <p>yaw·pitch·roll은 각각 부호 있는 32비트 정수이며 단위는 mrad입니다. 장착 방향 때문에 움직임이 반대로 보이면 출력 코어 레지스터에서 해당 축만 반전할 수 있습니다. 배선을 연결할 때는 <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/GY521_SENSOR_HUB.md">센서 허브 원본 문서</a>의 핀 배치를 확인하세요.</p>
 <h2>PYNQ-Z2 버튼</h2>
 <p>BTN0~BTN3는 출력 코어나 센서 허브와 별개인 4비트 AXI GPIO 입력입니다. 현재 비트스트림의 GPIO 주소는 <code>0x41200000</code>입니다. Bosio 데몬은 버튼의 눌림·뗌을 각 앱에 따로 전달하므로 한 앱이 이벤트를 읽어도 다른 앱의 이벤트는 사라지지 않습니다.</p>
-<table><thead><tr><th>버튼</th><th>현재 BoAYo 동작</th></tr></thead><tbody><tr><td>BTN0 / BTN1</td><td>하나뿐인 런처 패널을 현재 시선에서 열기</td></tr><tr><td>BTN2</td><td>시선 중심 클릭. 누른 채 움직이면 캡션 조작</td></tr><tr><td>BTN3</td><td>입력 이벤트만 제공하며 기본 UI 기능은 없음</td></tr></tbody></table>
+<table><thead><tr><th>버튼</th><th>현재 BoAYo 동작</th></tr></thead><tbody><tr><td>BTN0</td><td>Dashboard를 현재 시선으로 호출</td></tr><tr><td>BTN1</td><td>앱 목록 열기</td></tr><tr><td>BTN2</td><td>시선 중심 클릭. 누른 채 움직이면 캡션 조작</td></tr><tr><td>BTN3</td><td>현재 조작 취소</td></tr></tbody></table>
 <p>USB 마우스의 왼쪽 버튼도 창을 클릭하고 드래그할 수 있습니다. 서비스를 시작한 뒤 마우스를 연결했다면 서비스를 재시작해 입력 장치를 다시 찾게 하세요. <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_BUTTONS.md">버튼 입력 문서</a>에는 핀 번호와 Linux에서 버튼만 확인하는 방법이 있습니다.</p>
 </article>
       <div class="page-end">

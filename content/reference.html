@@ -4,7 +4,7 @@
 <tr><td>bosio_OutputCore</td><td>정이십면체 출력 코어 RTL, 투영, 안티에일리어싱, PYNQ 드라이버</td><td><a href="https://github.com/VARZero/bosio_OutputCore">저장소 열기</a></td></tr>
 <tr><td>bosio_SphericalWM</td><td>GY-521 센서 허브 RTL, Bosio 창 관리자, C++/NEON 합성기, 비트스트림</td><td><a href="https://github.com/VARZero/bosio_SphericalWM">저장소 열기</a></td></tr>
 <tr><td>bosio_BoAYO</td><td>런처, <code>apps.json</code>, BoAYo SDK, 앱 예제와 배포 도구</td><td><a href="https://github.com/VARZero/bosio_BoAYO">저장소 열기</a></td></tr>
-<tr><td>bosio_FullStack</td><td>세 저장소의 버전을 고정하고 보드에 함께 배포하는 도구</td><td><a href="https://github.com/VARZero/bosio_FullStack">저장소 열기</a></td></tr>
+<tr><td>bosio_FullStack</td><td>구성 요소의 버전을 고정하고 보드에 함께 배포하는 도구</td><td><a href="https://github.com/VARZero/bosio_FullStack">저장소 열기</a></td></tr>
 </tbody></table>
 <h2>데이터 형식과 전달 경로</h2>
 <p>여기서 <strong>장면</strong>은 Bosio가 여러 창을 합성해 정이십면체 프레임버퍼에 저장한 결과를 뜻합니다. 아래 표는 장면을 만드는 입력부터 출력 코어에 전달되는 데이터까지 이어집니다.</p>
@@ -14,7 +14,7 @@
 <tr><td>앱 이미지</td><td>높이 × 너비 × 3의 NumPy RGB24 배열</td><td>앱 → BoAYo SDK → Bosio 창 관리자</td></tr>
 <tr><td>창 위치와 크기</td><td>구면 중심 위치와 가로·세로 각도, 포커스와 창 겹침 순서</td><td>Bosio 창 관리자에서 처리</td></tr>
 <tr><td>정이십면체 장면</td><td>20면 × 면당 211타일 × 타일당 M² 삼각 셀, RGB332 색상표</td><td>Bosio 합성기 → 출력 코어</td></tr>
-<tr><td>장면의 일부 갱신</td><td>바뀐 타일만 담은 BPT1 데이터. BS25 드라이버가 비활성 DDR 버퍼에 적용한 뒤 코어가 프레임 경계에서 주소를 전환. 필요한 경우 전체 장면을 다시 전송</td><td>Bosio 합성기 → 드라이버 → 출력 코어</td></tr>
+<tr><td>장면의 일부 갱신</td><td>현재 M=32는 변경 payload·directory를 담은 BPT2 데이터. 기존 M=16은 BPT1. BS25 드라이버가 비활성 DDR 버퍼에 적용한 뒤 코어가 프레임 경계에서 주소를 전환. 첫 표시·형식 전환·복구 시 전체 snapshot 전송</td><td>Bosio 합성기 → 드라이버 → 출력 코어</td></tr>
 <tr><td>창 제어 메시지</td><td>JSON 메시지, Unix 도메인 소켓 <code>/tmp/bosio-wm.sock</code></td><td>앱·BoAYo SDK ↔ Bosio 창 관리자</td></tr>
 </tbody></table>
 <h2>더 자세히 읽을 문서</h2>
@@ -28,3 +28,17 @@
 <li><a href="https://github.com/VARZero/bosio_FullStack">통합 설치와 부팅 설정</a></li>
 </ul>
 <p>앱 창의 크기·포커스를 읽거나 변경 이벤트를 처리하려면 <a href="sdk.html">앱 작성 예제</a>를 먼저 보고, 함수별 설명은 <a href="sdk-reference.html">SDK 안내</a>에서 확인하세요. 각 구성 요소의 라이선스와 최신 소스는 해당 저장소에 있습니다.</p>
+
+<h2>이 문서의 검증 기준</h2>
+<p>2026-10-18 배포·푸시한 버전을 기준으로 2026-10-26 문서를 갱신했습니다. <a href="https://github.com/VARZero/bosio_ProjectionCore">ProjectionCore</a>는 독립 저장소이며 이번 화면 변환에서 변경하지 않았습니다.</p>
+<table><thead><tr><th>저장소</th><th>고정 커밋</th></tr></thead><tbody>
+<tr><td>OutputCore</td><td><a href="https://github.com/VARZero/bosio_OutputCore/commit/a8a1ec3177d453f4d91955baf2d4f9cbeafce22d">a8a1ec3</a></td></tr>
+<tr><td>SphericalWM</td><td><a href="https://github.com/VARZero/bosio_SphericalWM/commit/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d">95ecdbb</a></td></tr>
+<tr><td>BoAYO</td><td><a href="https://github.com/VARZero/bosio_BoAYO/commit/b0caf6952602f5d6a5a42e9436308ed9f2646ec3">b0caf69</a></td></tr>
+<tr><td>FullStack</td><td><a href="https://github.com/VARZero/bosio_FullStack/commit/8f39cdb5e255493385fa1974dffe4cd689674287">8f39cdb</a></td></tr>
+<tr><td>ProjectionCore</td><td><a href="https://github.com/VARZero/bosio_ProjectionCore/commit/60943cc825e47779c8175c2d411939dc68b106e1">60943cc</a></td></tr></tbody></table>
+<h2>비트스트림 식별</h2>
+<p>기본 <code>bosio_output_projection_dual.bit/.hwh</code>와 배포한 <code>bosio_output_projection_transform.bit/.hwh</code>는 동일한 내용입니다.</p>
+<pre><code>bit SHA-256: da015895bb27727d1bbef4f357bd706362112ed850feb5394e390323627d64d9
+hwh SHA-256: 5e88bc47677ad25befc72d2e9d9a5c1882bd500d15c733feaccf84e226c85db2</code></pre>
+<p><a href="https://github.com/VARZero/bosio_SphericalWM/blob/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d/overlays/dual_projection/results/publication_manifest.json">배포 manifest</a>는 IP 커밋, 런타임 소스 해시와 검증 내역을 포함합니다. <a href="https://github.com/VARZero/bosio_SphericalWM/blob/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d/overlays/dual_projection/results/display_transform_20261018/manifest.json">변환 빌드 manifest</a>와 <a href="https://github.com/VARZero/bosio_SphericalWM/tree/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d/overlays/dual_projection/verification/display_transform_20261018">실측·캡처 자료</a>를 함께 확인할 수 있습니다.</p>

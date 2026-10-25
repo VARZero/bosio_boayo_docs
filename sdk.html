@@ -41,6 +41,7 @@
             <div class="nav-group">핵심 시스템</div>
           <a class="nav-item" href="geometry.html">정이십면체 장면</a>
           <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="display-transform.html">화면 회전·반전</a>
           <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
           <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
           <a class="nav-item" href="external-input.html">외부 포인터 입력</a>
@@ -54,7 +55,7 @@
             <div class="nav-group">참고</div>
           <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">검증 구성 · M=32 · 투영코어 ×2 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>앱과 UI</span><span aria-hidden="true">/</span><strong>앱 SDK</strong></div>
@@ -63,7 +64,7 @@
         <h1>내 앱에 구면 창 붙이기</h1>
         <p>BoayoSDK로 내용을 그리고 이벤트를 받는 앱 예제를 제공합니다.</p>
       </div>
-      <article class="article"><p class="lead">여러 Python 앱이 동일한 BoAYo 창 규칙을 쓰려면 <code>boayo_sdk.py</code>를 가져옵니다. SDK가 Bosio IPC 접속, 창 등록, 아래 캡션, 이벤트 분배를 맡고 앱은 내용만 그립니다.</p>
+      <article class="article"><p class="lead">여러 Python 앱이 동일한 BoAYo 창 규칙을 쓰려면 <code>boayo_sdk.py</code>를 가져옵니다. SDK가 Bosio IPC 접속, 창 등록, 분리된 캡션, 이벤트 분배를 맡고 앱은 내용만 그립니다.</p>
 <div class="callout"><strong>함수와 이벤트를 찾으려면</strong><p><a href="sdk-reference.html">SDK 함수·이벤트 안내</a>에 함수별 인자와 반환값, <code>BoayoEvent</code> 필드, <code>BoayoSurface</code> 그리기 함수를 정리했습니다.</p></div>
 <h2>가장 작은 실행 앱</h2>
 <pre><code>import time
@@ -88,7 +89,7 @@ with BoayoSDK("hello") as sdk:
 <pre><code># image: NumPy 배열, shape=(높이, 너비, 3), RGB24
 window.present_rgb(image, fit="contain")
 # 필요하면 fit="stretch"</code></pre>
-<p>앱에서 만든 RGB 이미지를 보내면 SDK가 창 내용 영역에 맞춰 놓고 아래 캡션을 그립니다. 글씨의 선명도는 원본 이미지 크기, 창의 각도 크기, M 분할 수, Bosio의 투영 안티에일리어싱에 영향을 받습니다. 작은 글씨는 앱에서 먼저 크게·굵게 그리는 편이 좋습니다.</p>
+<p>앱에서 만든 RGB 이미지를 보내면 SDK가 창 내용 영역에 맞춰 놓고 프레임과 분리된 캡션을 관리하며 변경된 사각형만 전송합니다. 글씨의 선명도는 원본 이미지 크기, 창의 각도 크기, M 분할 수, Bosio의 투영 안티에일리어싱에 영향을 받습니다. 작은 글씨는 앱에서 먼저 크게·굵게 그리는 편이 좋습니다.</p>
 <h2>현재 크기와 포커스 읽기</h2>
 <pre><code>state = sdk.window_state(window)  # 또는 window.state
 print(state.width_deg, state.height_deg)          # 구면 창의 각도 크기(°)

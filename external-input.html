@@ -41,6 +41,7 @@
             <div class="nav-group">핵심 시스템</div>
           <a class="nav-item" href="geometry.html">정이십면체 장면</a>
           <a class="nav-item" href="output-core.html">출력 코어 RTL</a>
+          <a class="nav-item" href="display-transform.html">화면 회전·반전</a>
           <a class="nav-item" href="sensor-buttons.html">센서와 버튼</a>
           <a class="nav-item" href="window-manager.html">Bosio 창 관리자</a>
           <a class="nav-item active" href="external-input.html" aria-current="page">외부 포인터 입력</a>
@@ -54,7 +55,7 @@
             <div class="nav-group">참고</div>
           <a class="nav-item" href="reference.html">데이터와 소스</a>
       </nav>
-      <div class="sidebar-footer">현재 보드 설정 · M=16 · PYNQ-Z2</div>
+      <div class="sidebar-footer">검증 구성 · M=32 · 투영코어 ×2 · PYNQ-Z2</div>
     </aside>
     <main id="main" class="main">
       <div class="breadcrumb"><a href="./">문서</a><span aria-hidden="true">/</span><span>핵심 시스템</span><span aria-hidden="true">/</span><strong>외부 포인터 입력</strong></div>
@@ -103,6 +104,9 @@ python3 bosio_input_demo.py --azimuth 0 --elevation -59 --drag-degrees 12</code>
 <p>Python 이외의 언어에서는 한 줄 JSON IPC의 <code>input_warp</code>, <code>input_move</code>, <code>input_button</code>, <code>input_click</code>, <code>input_scroll</code>, <code>input_status</code> 호출을 사용할 수 있습니다.</p>
 
 <div class="callout"><strong>원본 문서와 코드</strong><p><a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/docs/BOSIO_EXTERNAL_INPUT.md">외부 포인터 입력 API 문서</a>와 <a href="https://github.com/VARZero/bosio_SphericalWM/blob/main/sw/bosio_input_client.py">Python 입력 클라이언트</a>에서 전체 내용을 볼 수 있습니다.</p></div>
+
+<h2>화면 회전·반전 상태에서 이동</h2>
+<p>위 구면 API의 방위각·고도각 의미는 그대로입니다. 화면 기준 이동이 필요하면 최신 <code>BosioWMClient</code>의 <code>input_display_move(dx, dy)</code>를 사용하세요. 각도 단위로 +x는 화면 오른쪽, +y는 아래이며 실제 적용된 출력 방향을 역변환합니다. evdev 마우스도 이 보정을 사용합니다. <a href="display-transform.html">회전·반전 설정</a>과 함께 사용할 수 있습니다.</p>
 </article>
       <div class="page-end">
         <a href="boayo.html"><span>다음 문서</span><strong>BoAYo 데스크톱 →</strong></a>

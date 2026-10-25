@@ -1,13 +1,16 @@
-<p class="lead">Bosio 창 관리자는 앱 이미지를 구면 위치에 놓고 창 겹침·포커스·입력을 처리합니다. 그 결과를 정이십면체 삼각 셀에 합성하면 출력 코어가 현재 자세에서 필요한 셀을 읽어 화면에 표시합니다.</p>
-<h2>창과 IPC</h2>
-<p>데몬은 Unix 도메인 소켓 <code>/tmp/bosio-wm.sock</code>으로 JSON 메시지를 받습니다. 앱은 이 프로세스 간 통신(IPC)으로 구면 창을 만들고 RGB 이미지를 보내며 입력 이벤트를 읽습니다. 창 관리자는 여러 앱의 창이 겹치는 순서와 포커스를 관리합니다. BoAYo SDK는 이 기능에 앱 창의 아래 캡션을 덧붙입니다.</p>
-<h2>합성에서 출력 코어까지</h2>
-<div class="flow"><span>앱 RGB24 표면</span><span>구면 창 겹침</span><span>C++/NEON 셀 합성</span><span>RGB332 장면</span><span>DDR 버퍼 갱신</span><span>BS25 읽기 캐시</span></div>
-<p>C++ 합성기는 ARM의 NEON 명령을 사용합니다. 창 내용의 일부가 바뀌면 안티에일리어싱에 쓰이는 픽셀 범위와 겹치는 삼각 셀만 다시 합성해 BPT1 데이터로 보냅니다. 창 위치·크기·겹침이 바뀌거나 아래 창의 색을 다시 계산해야 할 때는 전체 장면을 보냅니다. 정이십면체 프레임버퍼는 Bosio 창 관리자가 관리하므로 앱 하나가 화면 전체를 차지하지 않습니다.</p>
-<h2>입력과 포커스</h2>
-<p>BS25에서 BPT1의 수신자는 드라이버입니다. 드라이버가 비활성 DDR 장면의 변경 타일을 수정하고, 출력 코어의 프레임 경계 주소 전환을 확인합니다. 코어에 BPT1 패킷 주소를 직접 넘기는 방식은 이전 BS24 호환 모드에만 해당합니다.</p>
-<p>마우스 클릭과 BTN2 시선 클릭은 같은 창 입력 경로로 처리됩니다. 클릭한 위치에서 가장 위에 있는 창에 포커스를 주고 해당 앱으로 이벤트를 보냅니다. BoAYo 런처 패널은 앱 창 위에 표시되지만, 패널 바깥을 클릭하면 패널만 닫힙니다. 그 위치에 앱 창이 있다면 클릭도 그 앱에 전달되고 기존 창은 계속 남습니다.</p>
-<p>관성 추적기나 카메라 손동작 인식기는 외부 입력 API를 통해 같은 포인터 경로에 구면 이동·클릭·드래그를 보낼 수 있습니다. 자세한 연결 방법은 <a href="external-input.html">외부 포인터 입력</a>에서 설명합니다.</p>
-<h2>장면 갱신 속도와 영상 속도</h2>
-<p>출력 코어는 저장된 장면을 읽어 HDMI 영상을 계속 만듭니다. 창 내용의 변경은 Bosio가 필요한 셀을 합성하고 출력 코어에 보낸 뒤 화면에 나타납니다. HDMI 출력 프레임률과 창 내용 갱신 속도의 차이는 <a href="quality.html">화질과 성능</a>에서 설명합니다.</p>
-<div class="callout"><strong>개발 소스</strong><p><a href="https://github.com/VARZero/bosio_SphericalWM">bosio_SphericalWM</a>에 WM 데몬, IPC 클라이언트, 네이티브 합성기, 부분 갱신, 보드 서비스와 센서 허브 RTL이 함께 있습니다.</p></div>
+<p class="lead">Bosio는 구면 창 배치·겹침·포커스·입력을 관리하고, <strong>변경된 타일만 다시 투영</strong>합니다. 현재 backend는 <code>fpga-dual+ps-incremental</code>입니다.</p>
+<h2>변경 종류에 따른 처리</h2>
+<table><thead><tr><th>변경</th><th>HW 투영</th><th>재사용·합성</th></tr></thead><tbody>
+<tr><td>내용 일부 수정</td><td>실제 변경 픽셀과 샘플링 범위가 영향을 주는 타일만</td><td>다른 창은 캐시 재사용</td></tr>
+<tr><td>창 이동·크기 변경</td><td>해당 창의 투영 갱신</td><td>다른 창 재사용, 이전·새 위치의 영향 타일 합성</td></tr>
+<tr><td>순서 변경·숨김·같은 위치 복원·제거</td><td>유효한 캐시가 있으면 0건</td><td>캐시된 레이어로 영향 타일만 합성</td></tr>
+<tr><td>같은 픽셀 재전송·시각적 변화 없음</td><td>0건</td><td>출력 데이터 0, 출력 장면 commit 0회</td></tr>
+<tr><td>화면 전체 회전·반전</td><td>0건</td><td>Output Core 계수만 변경</td></tr></tbody></table>
+<p>첫 표시, 출력 형식 전환, 실패 복구에는 전체 snapshot을 사용합니다. BoAYo의 둥근 창과 분리된 손잡이는 PS coverage mask를 캐시하므로 모양만으로 native fallback에 들어가지 않습니다. 지원하지 않는 경로는 C++/NEON fallback을 사용합니다.</p>
+<h2>BPT2와 프레임 경계 교체</h2>
+<p>M=32 경로는 BPT2로 바뀐 payload와 directory만 전달합니다. 16-word header 뒤에 타일당 272-word record가 오며, 그중 256 words가 셀 payload입니다. 드라이버는 범위·중복·offset을 검증하고 비활성 DDR 장면을 갱신합니다. 표시 중인 버퍼는 전환 승인 전에 수정하지 않습니다. 타일 활성·비활성 변경은 하드웨어 metadata를 다시 읽게 하고, 내용만 바뀌면 주소 교체 방식의 부분 commit을 유지합니다. 이전 M=16 경로의 BPT1과 구분해야 합니다.</p>
+<h2>IPC와 입력</h2>
+<p>Unix 소켓 <code>/tmp/bosio-wm.sock</code>의 JSON IPC로 창 생성, RGB 업로드, 입력과 상태를 처리합니다. BoAYo SDK는 이 위에서 앱과 캡션을 관리합니다. 화면을 회전해도 구면 입력 좌표는 유지하며, 화면 방향 기준 이동은 <code>input_display_move(dx, dy)</code>로 보냅니다. <a href="external-input.html">외부 입력</a>과 <a href="display-transform.html">화면 방향 API</a>를 참조하세요.</p>
+<h2>실제 보드 검증</h2>
+<p>128×96 원본의 24°×24° 시험 창은 전체 72타일입니다. 8×8 내용 수정은 5타일만 투영했고, 같은 픽셀 재전송은 0건이었습니다. 최신 빌드에서 14개 증분 사례가 통과했으며 HW 경로의 전체 4,220타일 캐시 재합성 및 활성 DDR 비교에서 불일치가 0이었습니다. 이 비교는 부분 합성·출력 일관성 검증이고 독립 투영 모델 비교는 호스트에서 수행합니다.</p>
+<p class="source-note"><a href="https://github.com/VARZero/bosio_SphericalWM/blob/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d/overlays/dual_projection/INCREMENTAL_RESULTS.md">처리 규칙과 이전 실측</a> · <a href="https://github.com/VARZero/bosio_SphericalWM/blob/95ecdbb7f8383ce9e56b5c54cfd7805b3ea6298d/overlays/dual_projection/verification/display_transform_20261018/incremental_results.json">최신 보드 원시 결과</a></p>
